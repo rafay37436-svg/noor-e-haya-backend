@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Catalog | Noor-e-Haya Luxury Abayas</title>
+    <link rel="stylesheet" href="Noor_e_haya.css">
+</head>
+<body>
+
+    <div class="announcement-bar">
+        <p>FREE SHIPPING ACROSS PAKISTAN ON ORDERS ABOVE RS. 15,000 | CASH ON DELIVERY AVAILABLE</p>
+    </div>
+
+    <header class="luxury-header">
+        <div class="brand-logo">
+            <h1>NOOR-E-HAYA</h1>
+            <span class="sub-brand">PREMIUM COUTURE</span>
+        </div>
+        <nav class="main-nav">
+            <ul class="nav-links">
+                <li><a href="Noor_e_haya.html">HOME</a></li>
+                <li><a href="Shop.html" class="active">SHOP CATALOG</a></li>
+                <li><a href="heritage.html">OUR HERITAGE</a></li>
+                <li><a href="contact.html">CONTACT US</a></li>
+            </ul>
+        </nav>
+        <div class="utility-menu">
+            <button class="icon-btn">🔍</button>
+            <button class="icon-btn">👤</button>
+            <button class="icon-btn">👜 <span class="cart-count">0</span></button>
+        </div>
+    </header>
+
+    <section class="featured-catalog">
+        <div class="section-title-area">
+            <h3>PREMIUM ABAYA CATALOG</h3>
+            <p>Filter by occasion, fabric weaves, and signature silhouettes.</p>
+        </div>
+        
+    <!-- PREMIUM ABAYA CATALOG GRID -->
+<!-- PREMIUM MODEST ABAYA CATALOG GRID -->
+<!-- PREMIUM MODEST ISLAMIC ABAYA CATALOG GRID -->
+<section class="featured-catalog" style="padding: 40px 20px; background-color: #0b0b0b; min-height: 80vh;">
+    
+    <div id="admin-panel" style="display: none; max-width: 1200px; margin: 0 auto 50px auto; background: #111; border: 2px dashed #D4AF37; padding: 30px; border-radius: 4px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding-bottom: 15px; margin-bottom: 20px;">
+            <div>
+                <h3 style="color: #D4AF37; margin: 0; font-family: serif; text-transform: uppercase;">🔒 Owner Admin Controls</h3>
+                <p style="color: #666; font-size: 0.8rem; margin: 5px 0 0 0;">Press <strong>Ctrl + Shift + A</strong> anywhere to hide this panel from your customers.</p>
+            </div>
+            <button id="clear-store-btn" style="background: transparent; color: #ff5555; border: 1px solid #ff5555; padding: 6px 12px; cursor: pointer; border-radius: 2px;">Reset/Clear Everything</button>
+        </div>
+        
+        <h4 style="color: #fff; margin-bottom: 10px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">✨ Add New Item to Catalog</h4>
+        <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-end; background: #161616; padding: 15px; border-radius: 4px; margin-bottom: 30px; border: 1px solid #222;">
+            <div style="flex: 1; min-width: 250px;">
+                <label style="display: block; font-size: 0.75rem; color: #D4AF37; margin-bottom: 5px;">ABAYA NAME:</label>
+                <input type="text" id="new-prod-title" placeholder="e.g., Luxury Irani Abaya" style="width: 100%; background: #222; color: #fff; border: 1px solid #333; padding: 10px; box-sizing: border-box;">
+            </div>
+            <div style="flex: 1; min-width: 150px;">
+                <label style="display: block; font-size: 0.75rem; color: #D4AF37; margin-bottom: 5px;">PRICE (Rs.):</label>
+                <input type="text" id="new-prod-price" placeholder="e.g., 7,000" style="width: 100%; background: #222; color: #fff; border: 1px solid #333; padding: 10px; box-sizing: border-box;">
+            </div>
+            <div style="flex: 1; min-width: 220px;">
+                <label style="display: block; font-size: 0.75rem; color: #D4AF37; margin-bottom: 5px;">UPLOAD PICTURE:</label>
+                <input type="file" id="new-prod-img" accept="image/*" style="color: #ccc; font-size: 0.85rem; width: 100%;">
+            </div>
+            <div>
+                <button id="add-product-btn" style="background: #D4AF37; color: #000; border: none; padding: 12px 30px; font-weight: bold; cursor: pointer; text-transform: uppercase;">Add to Store</button>
+            </div>
+        </div>
+
+        <h4 style="color: #fff; margin-bottom: 10px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;">🔧 Edit / Modify Existing Item</h4>
+        <div style="background: #161616; padding: 20px; border-radius: 4px; margin-bottom: 30px; border: 1px solid #D4AF37;">
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-size: 0.75rem; color: #D4AF37; margin-bottom: 5px;">SELECT THE PRODUCT YOU WANT TO CHANGE:</label>
+                <select id="edit-product-select" style="width: 100%; background: #222; color: #fff; border: 1px solid #333; padding: 10px; border-radius: 2px; cursor: pointer;">
+                    <option value="">-- Choose an item to edit --</option>
+                </select>
+            </div>
+            
+            <div id="edit-fields-area" style="display: none; flex-wrap: wrap; gap: 20px; align-items: flex-end; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #333;">
+                <div style="flex: 1; min-width: 250px;">
+                    <label style="display: block; font-size: 0.75rem; color: #ccc; margin-bottom: 5px;">UPDATE NAME:</label>
+                    <input type="text" id="edit-prod-title" style="width: 100%; background: #222; color: #fff; border: 1px solid #333; padding: 10px; box-sizing: border-box;">
+                </div>
+                <div style="flex: 1; min-width: 150px;">
+                    <label style="display: block; font-size: 0.75rem; color: #ccc; margin-bottom: 5px;">UPDATE PRICE:</label>
+                    <input type="text" id="edit-prod-price" style="width: 100%; background: #222; color: #fff; border: 1px solid #333; padding: 10px; box-sizing: border-box;">
+                </div>
+                <div style="flex: 1; min-width: 220px;">
+                    <label style="display: block; font-size: 0.75rem; color: #ccc; margin-bottom: 5px;">REPLACE PICTURE (Optional):</label>
+                    <input type="file" id="edit-prod-img" accept="image/*" style="color: #ccc; font-size: 0.85rem; width: 100%;">
+                </div>
+                <div>
+                    <button id="update-product-btn" style="background: #222; color: #D4AF37; border: 1px solid #D4AF37; padding: 12px 30px; font-weight: bold; cursor: pointer; text-transform: uppercase;">Save Changes</button>
+                </div>
+            </div>
+        </div>
+
+        <h4 style="color: #fff; margin-bottom: 10px; font-size: 0.9rem; text-transform: uppercase;">Customer Incoming Orders Log</h4>
+        <div style="background: #161616; padding: 15px; border-radius: 4px; max-height: 200px; overflow-y: auto; border: 1px solid #222;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; color: #ccc;">
+                <thead>
+                    <tr style="border-bottom: 1px solid #333; color: #D4AF37;">
+                        <th style="padding: 8px;">Order ID</th>
+                        <th style="padding: 8px;">Product</th>
+                        <th style="padding: 8px;">Price</th>
+                        <th style="padding: 8px;">Time</th>
+                    </tr>
+                </thead>
+                <tbody id="orders-log-table"></tbody>
+            </table>
+            <div id="no-orders-msg" style="color: #555; text-align: center; padding: 15px 0; font-style: italic;">No custom orders placed yet.</div>
+        </div>
+    </div>
+
+    <div class="catalog-grid" id="dynamic-catalog-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; padding: 20px; max-width: 1200px; margin: 0 auto;"></div>
+
+</section>
+
+<script>
+(function() {
+    var defaultProducts = [
+        { id: 101, title: "Classic Black Nidha Abaya", price: "Rs. 12,500", img: "placeholder" },
+        { id: 102, title: "Butterfly Wing Loose Abaya", price: "Rs. 14,900", img: "placeholder" },
+        { id: 103, title: "Premium Double-Layer Hijab", price: "Rs. 3,500", img: "placeholder" }
+    ];
+
+    var storeProducts = JSON.parse(localStorage.getItem('boutique_inventory')) || defaultProducts;
+    var customerOrders = JSON.parse(localStorage.getItem('boutique_orders')) || [];
+
+    var gridContainer = document.getElementById('dynamic-catalog-grid');
+    var adminPanel = document.getElementById('admin-panel');
+    var ordersTable = document.getElementById('orders-log-table');
+    var noOrdersMsg = document.getElementById('no-orders-msg');
+    
+    var editSelect = document.getElementById('edit-product-select');
+    var editFieldsArea = document.getElementById('edit-fields-area');
+
+    // Render Store Items
+    function renderCatalog() {
+        if (!gridContainer) return;
+        gridContainer.innerHTML = '';
+        
+        for (var i = 0; i < storeProducts.length; i++) {
+            var product = storeProducts[i];
+            var imageSrc = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23161616'/><line x1='0' y1='0' x2='100' y2='100' stroke='%232c2512' stroke-width='0.5'/><line x1='100' y1='0' x2='0' y2='100' stroke='%232c2512' stroke-width='0.5'/></svg>";
+            
+            if (product.img && product.img !== "placeholder") {
+                imageSrc = product.img;
+            }
+
+            var cardHTML = '<div class="product-card" style="background-color: #161616; padding: 20px; border: 1px solid #222; text-align: center; border-radius: 4px; display: flex; flex-direction: column; justify-content: space-between;">' +
+                '<div>' +
+                    '<div style="width: 100%; height: 350px; background: #222; margin-bottom: 15px; border-radius: 2px; overflow: hidden; display: flex; align-items: center; justify-content: center; position: relative; border: 1px solid #2d2d2d;">' +
+                        '<img src="' + imageSrc + '" style="width: 100%; height: 100%; object-fit: cover;">' +
+                        (product.img === "placeholder" ? '<span style="position: absolute; color: #444; font-size: 0.75rem; font-family: sans-serif; font-weight: bold;">NO IMAGE UPLOADED</span>' : '') +
+                    '</div>' +
+                    '<span style="color: #888; font-size: 0.75rem; display: block; margin-bottom: 5px; letter-spacing: 1px;">PREMIUM SELECTION</span>' +
+                    '<h4 style="color: #FDFBF7; margin: 5px 0; font-size: 1.2rem; font-family: serif; font-weight: normal;">' + product.title + '</h4>' +
+                '</div>' +
+                '<div>' +
+                    '<div style="color: #D4AF37; font-weight: bold; margin: 10px 0 15px 0; font-size: 1.15rem;">' + product.price + '</div>' +
+                    '<button onclick="window.makeOrder(\'' + product.title.replace(/'/g, "\\'") + '\', \'' + product.price + '\')" style="display: inline-block; background: #222; color: #D4AF37; border: 1px solid #D4AF37; padding: 10px 20px; width: 85%; font-size: 0.85rem; font-weight: bold; cursor: pointer;">ADD TO BAG</button>' +
+                '</div>' +
+            '</div>';
+            
+            gridContainer.innerHTML += cardHTML;
+        }
+        populateEditDropdown();
+    }
+
+    // Refresh the Dropdown list of items inside Admin Editor
+    function populateEditDropdown() {
+        if (!editSelect) return;
+        editSelect.innerHTML = '<option value="">-- Choose an item to edit --</option>';
+        for (var i = 0; i < storeProducts.length; i++) {
+            editSelect.innerHTML += '<option value="' + storeProducts[i].id + '">' + storeProducts[i].title + ' (' + storeProducts[i].price + ')</option>';
+        }
+    }
+
+    // Detect when an item is selected to be edited
+    if (editSelect) {
+        editSelect.addEventListener('change', function() {
+            var selectedId = editSelect.value;
+            if (!selectedId) {
+                editFieldsArea.style.display = 'none';
+                return;
+            }
+            
+            // Find item data
+            var targetItem = storeProducts.find(function(p) { return p.id == selectedId; });
+            if (targetItem) {
+                document.getElementById('edit-prod-title').value = targetItem.title;
+                document.getElementById('edit-prod-price').value = targetItem.price.replace('Rs. ', '');
+                document.getElementById('edit-prod-img').value = ''; // Reset file input
+                editFieldsArea.style.display = 'flex';
+            }
+        });
+    }
+
+    // Save Modified changes
+    var updateBtn = document.getElementById('update-product-btn');
+    if (updateBtn) {
+        updateBtn.addEventListener('click', function() {
+            var selectedId = editSelect.value;
+            var newTitle = document.getElementById('edit-prod-title').value.trim();
+            var newPrice = document.getElementById('edit-prod-price').value.trim();
+            var fileInput = document.getElementById('edit-prod-img').files;
+
+            if (!newTitle || !newPrice) {
+                alert("Fields cannot be left blank.");
+                return;
+            }
+
+            var itemIndex = storeProducts.findIndex(function(p) { return p.id == selectedId; });
+            if (itemIndex === -1) return;
+
+            var cleanPrice = newPrice.indexOf('Rs.') === 0 ? newPrice : 'Rs. ' + newPrice;
+
+            if (fileInput) {
+                var reader = new FileReader();
+                reader.onload = function(ev) {
+                    storeProducts[itemIndex].title = newTitle;
+                    storeProducts[itemIndex].price = cleanPrice;
+                    storeProducts[itemIndex].img = ev.target.result;
+                    finalizeUpdate();
+                };
+                reader.readAsDataURL(fileInput);
+            } else {
+                storeProducts[itemIndex].title = newTitle;
+                storeProducts[itemIndex].price = cleanPrice;
+                finalizeUpdate();
+            }
+        });
+    }
+
+    function finalizeUpdate() {
+        localStorage.setItem('boutique_inventory', JSON.stringify(storeProducts));
+        renderCatalog();
+        editFieldsArea.style.display = 'none';
+        editSelect.value = '';
+        alert("Product modifications updated successfully!");
+    }
+
+    // Render Order Tracking Logs
+    function renderOrders() {
+        if (!ordersTable) return;
+        ordersTable.innerHTML = '';
+        if (customerOrders.length === 0) {
+            if (noOrdersMsg) noOrdersMsg.style.display = 'block';
+        } else {
+            if (noOrdersMsg) noOrdersMsg.style.display = 'none';
+            for (var j = 0; j < customerOrders.length; j++) {
+                var order = customerOrders[j];
+                ordersTable.innerHTML += '<tr style="border-bottom: 1px solid #222;">' +
+                    '<td style="padding: 8px; color: #888;">#' + order.id + '</td>' +
+                    '<td style="padding: 8px; color: #fff; font-weight: bold;">' + order.title + '</td>' +
+                    '<td style="padding: 8px; color: #D4AF37;">' + order.price + '</td>' +
+                    '<td style="padding: 8px; color: #666; font-size: 0.75rem;">' + order.time + '</td>' +
+                '</tr>';
+            }
+        }
+    }
+
+    window.makeOrder = function(title, price) {
+        var newOrder = {
+            id: Math.floor(1000 + Math.random() * 9000),
+            title: title,
+            price: price,
+            time: new Date().toLocaleTimeString()
+        };
+        customerOrders.unshift(newOrder);
+        localStorage.setItem('boutique_orders', JSON.stringify(customerOrders));
+        renderOrders();
+        alert('✨ Added to Bag!\n' + title + ' has been registered.');
+    };
+
+    // Global toggle listener (Ctrl + Shift + A)
+    window.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.shiftKey && e.key.toUpperCase() === 'A') {
+            e.preventDefault();
+            if (adminPanel.style.display === 'none') {
+                adminPanel.style.display = 'block';
+                adminPanel.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                adminPanel.style.display = 'none';
+            }
+        }
+    });
+
+    // Add New Product Submission
+    var addBtn = document.getElementById('add-product-btn');
+    if (addBtn) {
+        addBtn.addEventListener('click', function() {
+            var titleVal = document.getElementById('new-prod-title').value.trim();
+            var priceVal = document.getElementById('new-prod-price').value.trim();
+            var fileInput = document.getElementById('new-prod-img').files;
+            
+            if (!titleVal || !priceVal) {
+                alert("Please fill out both item name and price.");
+                return;
+            }
+
+            if (storeProducts.length === 3 && storeProducts.id === 101 && !localStorage.getItem('boutique_inventory')) {
+                storeProducts = [];
+            }
+
+            if (fileInput) {
+                var reader = new FileReader();
+                reader.onload = function(ev) {
+                    commitProduct(titleVal, priceVal, ev.target.result);
+                };
+                reader.readAsDataURL(fileInput);
+            } else {
+                commitProduct(titleVal, priceVal, "placeholder");
+            }
+        });
+    }
+
+    function commitProduct(t, p, imgData) {
+        var cleanPrice = p.indexOf('Rs.') === 0 ? p : 'Rs. ' + p;
+        storeProducts.push({
+            id: Date.now(),
+            title: t,
+            price: cleanPrice,
+            img: imgData
+        });
+        localStorage.setItem('boutique_inventory', JSON.stringify(storeProducts));
+        renderCatalog();
+        
+        document.getElementById('new-prod-title').value = '';
+        document.getElementById('new-prod-price').value = '';
+        document.getElementById('new-prod-img').value = '';
+        alert("Product added successfully!");
+    }
+
+    var clearBtn = document.getElementById('clear-store-btn');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function() {
+            if (confirm("Reset layout? This clears custom items and updates.")) {
+                localStorage.removeItem('boutique_inventory');
+                localStorage.removeItem('boutique_orders');
+                location.reload();
+            }
+        });
+    }
+
+    renderCatalog();
+    renderOrders();
+})();
+</script>
+</body>
+</html>

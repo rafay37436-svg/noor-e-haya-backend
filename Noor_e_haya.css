@@ -1,0 +1,211 @@
+/* Base Layout Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #111111;
+    color: #FDFBF7;
+    font-family: 'Times New Roman', Times, serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Announcement Bar */
+.announcement-bar {
+    background-color: #FDFBF7;
+    color: #111111;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    font-weight: 600;
+}
+
+/* Luxury Header Architecture */
+.luxury-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 5%;
+    border-bottom: 1px solid rgba(253, 251, 247, 0.1);
+    background-color: #111111;
+}
+
+.brand-logo h1 {
+    font-size: 1.8rem;
+    letter-spacing: 5px;
+    font-weight: 400;
+    color: #FDFBF7;
+}
+
+.sub-brand {
+    font-size: 0.6rem;
+    letter-spacing: 4px;
+    color: #D4AF37;
+    display: block;
+    text-align: center;
+    margin-top: 2px;
+}
+
+.main-nav .nav-links {
+    display: flex;
+    list-style: none;
+    gap: 35px;
+}
+
+.main-nav .nav-links a {
+    color: rgba(253, 251, 247, 0.7);
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    transition: color 0.3s ease;
+}
+
+.main-nav .nav-links a:hover,
+.main-nav .nav-links a.active {
+    color: #D4AF37;
+}
+
+.utility-menu {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: #FDFBF7;
+    font-size: 1.1rem;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s ease;
+}
+
+.icon-btn:hover {
+    transform: scale(1.1);
+}
+
+.cart-count {
+    font-size: 0.65rem;
+    background-color: #D4AF37;
+    color: #111111;
+    padding: 1px 5px;
+    border-radius: 50%;
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    font-weight: bold;
+}
+
+/* Hero Exhibition Area */
+.hero-exhibition {
+    min-height: calc(100vh - 120px);
+    display: flex;
+    align-items: center;
+    padding: 0 8%;
+    background: linear-gradient(rgba(17, 17, 17, 0.45), #111111), 
+                radial-gradient(circle at 80% 30%, #2b1e1a 0%, #111111 70%);
+}
+
+.hero-content {
+    max-width: 550px;
+}
+
+.collection-tag {
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    color: #D4AF37;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.hero-content h2 {
+    font-size: 3.5rem;
+    font-weight: 400;
+    letter-spacing: 2px;
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+
+.hero-content p {
+    font-size: 1.05rem;
+    color: rgba(253, 251, 247, 0.75);
+    line-height: 1.7;
+    margin-bottom: 35px;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 14px 35px;
+    background-color: transparent;
+    color: #FDFBF7;
+    border: 1px solid #FDFBF7;
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #FDFBF7;
+    color: #111111;
+}
+/* Fix for Product Catalog Layout Architecture */
+.featured-catalog {
+    padding: 60px 5%;
+    background-color: #111111;
+    width: 100%;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+    width: 100%;
+}
+
+.product-card {
+    background-color: #161616;
+    border: 1px solid rgba(253, 251, 247, 0.05);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.product-info h4 {
+    color: #FDFBF7;
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin: 15px 0 5px 0;
+}
+
+.product-price {
+    color: #D4AF37;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.view-btn {
+    display: inline-block;
+    text-align: center;
+    padding: 12px;
+    background-color: transparent;
+    color: #FDFBF7;
+    border: 1px solid rgba(253, 251, 247, 0.3);
+    text-decoration: none;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    transition: all 0.3s ease;
+}
+
+.view-btn:hover {
+    background-color: #FDFBF7;
+    color: #111111;
+}
