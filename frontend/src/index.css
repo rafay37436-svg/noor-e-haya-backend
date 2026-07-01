@@ -124,12 +124,20 @@ a:focus-visible {
   background: var(--bg-pitch);
   border-bottom: 1px solid var(--border-muted);
   z-index: 100;
-  padding: clamp(10px, 3vw, 20px);
+  padding: 8px 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: var(--space-lg);
+  flex-direction: column;
+  gap: 8px;
+}
+
+@media (min-width: 768px) {
+  .noor-nav {
+    flex-direction: row;
+    padding: clamp(10px, 3vw, 20px);
+    gap: var(--space-lg);
+  }
 }
 
 .noor-logo-text {
