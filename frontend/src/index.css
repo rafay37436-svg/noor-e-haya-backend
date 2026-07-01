@@ -948,57 +948,154 @@ footer span[role="button"]:hover {
 /* ==========================================
    MOBILE-SPECIFIC OPTIMIZATIONS
    ========================================== */
-
-@media (max-width: 640px) {
+/* MOBILE FIRST - Extra Small Screens (320px - 375px) */
+@media (max-width: 375px) {
   html {
     font-size: 14px;
   }
-
+  
   .noor-nav {
-    padding: 10px;
+    padding: 6px 8px;
+    gap: 4px;
+    flex-direction: column;
   }
-
+  
+  .noor-logo-text {
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+  }
+  
   .noor-nav-links {
-    gap: 6px;
+    width: 100%;
+    justify-content: center;
+    gap: 4px;
   }
-
+  
   .noor-nav-links button {
-    font-size: 0.65rem;
-    padding: 6px 4px;
+    font-size: 0.6rem;
+    margin-left: 4px;
+    padding: 4px 6px;
+    min-height: 40px;
   }
-
+  
+  .noor-content {
+    padding-top: 80px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  
+  h1 {
+    font-size: clamp(1.4rem, 5vw, 2rem);
+  }
+  
+  h2 {
+    font-size: clamp(1rem, 4vw, 1.3rem);
+  }
+  
+  p {
+    font-size: clamp(0.75rem, 2.5vw, 0.85rem);
+  }
+  
+  .product-grid,
+  .responsive-catalog-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .feature-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
   .prod-footer {
     flex-direction: column;
     align-items: stretch;
+    gap: 8px;
   }
-
+  
   .shop-action-pill,
   .gold-btn {
     width: 100%;
   }
-
+  
   .search-wrapper {
     flex-direction: column;
   }
-
+  
   .search-wrapper input,
   .search-wrapper button {
     width: 100%;
   }
 }
 
-@media (max-width: 480px) {
+/* Small Screens (376px - 480px) */
+@media (min-width: 376px) and (max-width: 480px) {
+  html {
+    font-size: 15px;
+  }
+  
   .noor-nav {
+    padding: 8px 12px;
+    gap: 6px;
+  }
+  
+  .noor-nav-links {
     gap: 8px;
   }
-
+  
+  .noor-nav-links button {
+    font-size: 0.65rem;
+    margin-left: 6px;
+    padding: 6px 4px;
+    min-height: 40px;
+  }
+  
+  .noor-content {
+    padding-top: 90px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  
   .noor-logo-svg {
     width: 28px;
     height: 28px;
   }
+  
+  .prod-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .shop-action-pill,
+  .gold-btn {
+    width: 100%;
+  }
+  
+  .search-wrapper {
+    flex-direction: column;
+  }
+  
+  .search-wrapper input,
+  .search-wrapper button {
+    width: 100%;
+  }
+}
 
-  .noor-content {
-    padding-top: 70px;
+/* Medium Screens (481px - 768px) */
+@media (min-width: 481px) and (max-width: 768px) {
+  .noor-nav {
+    padding: 10px 20px;
+    flex-direction: row;
+  }
+  
+  .noor-nav-links {
+    gap: 15px;
+  }
+  
+  .product-grid,
+  .responsive-catalog-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
   }
 }
 
