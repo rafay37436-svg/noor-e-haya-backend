@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import logoIcon from './assets/logo-icon.png';
 
 export default function AdminDashboard() {
   // Local list of items for management
