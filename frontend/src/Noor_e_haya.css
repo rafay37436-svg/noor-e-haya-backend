@@ -1,82 +1,769 @@
-/* ==========================================================================
-   MOBILE-FIRST GLOBAL STYLES & LAYOUT RESET
-   ========================================================================== */
+/* ============================================================
+   NOOR-E-HAYA — LUXURY CREAM & GOLD THEME (Light Edition)
+   Matches classes/variables used directly in App.jsx
+   Mobile-first, fully responsive (360px – 1440px+)
+   ============================================================ */
+
+/* ---------- DESIGN TOKENS ---------- */
+:root {
+  --gold-accent: #B8860B;
+  --gold-light: #D4AF37;
+  --gold-dark: #8a6508;
+
+  --bg-page: #f5efe4;
+  --bg-card: #ffffff;
+  --bg-card-alt: #faf6ec;
+
+  --border-muted: #e2d8c3;
+  --border-light: #cfc0a0;
+
+  --text-pure: #241f18;
+  --text-gray: #4a4238;
+  --text-muted: #8a8070;
+
+  --status-success: #2f7d4f;
+  --status-error: #b33a3a;
+  --status-info: #3b6ea5;
+
+  --font-serif: 'Playfair Display', 'Didot', 'Garamond', 'Georgia', serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ---------- RESET & BASE ---------- */
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   padding: 0;
-  background-color: #0b0b0b;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  overflow-x: hidden; /* Prevent ugly horizontal scrolling on tiny phone viewports */
+  background-color: var(--bg-page);
+  color: var(--text-gray);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  overflow-x: hidden;
 }
 
-/* Cinematic Mobile-First Animated Brand Title */
-@keyframes premiumCinematicFade {
-  0% { opacity: 0; letter-spacing: -1px; transform: scale(0.96) translateY(3px); filter: blur(3px); }
-  100% { opacity: 1; letter-spacing: 3px; transform: scale(1) translateY(0); filter: blur(0); }
+h1, h2, h3, h4 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  color: var(--text-pure);
+  margin: 0 0 12px 0;
 }
 
-@keyframes goldSheenSweep {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
+p {
+  color: var(--text-gray);
+  margin: 0 0 12px 0;
 }
 
-.cinematic-brand-title {
-  font-family: 'Playfair Display', 'Didot', serif !important;
-  font-weight: 300 !important;
-  text-transform: uppercase;
-  background: linear-gradient(90deg, #fff 0%, #f3e5ab 25%, #D4AF37 50%, #f3e5ab 75%, #fff 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: premiumCinematicFade 1.8s ease-out forwards, goldSheenSweep 6s linear infinite;
+a {
+  color: var(--gold-accent);
+  text-decoration: none;
 }
 
-/* Responsive Structural Catalog Layout */
-.responsive-catalog-grid {
-  display: grid;
-  grid-template-columns: 1fr; /* Default to 1 item per row on mobile to give a premium, clean layout */
-  gap: 20px;
-  padding: 15px;
-  max-width: 1200px;
-  margin: 0 auto;
+button {
+  font-family: var(--font-sans);
+  cursor: pointer;
 }
 
-/* Switch layout instantly to multi-columns if screens get bigger */
-@media (min-width: 480px) {
-  .responsive-catalog-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 items per row on tablets/larger phones */
-  }
-}
-
-@media (min-width: 992px) {
-  .responsive-catalog-grid {
-    grid-template-columns: repeat(3, 1fr); /* 3 items per row on laptops */
-  }
-}
-
-/* ==========================================================================
-   MOBILE-OPTIMIZED MAIN OVERLAYS & CONTROLS
-   ========================================================================== */
-.responsive-nav-list {
-  display: flex;
-  flex-wrap: wrap; /* Wraps clean links evenly instead of overlapping on mobile headers */
-  justify-content: center;
-  gap: 15px;
-  list-style: none;
-  margin: 0;
-  padding: 10px 0;
-}
-
-/* Custom Hide utilities to protect tables on tiny devices */
-.scrollable-table-wrapper {
+input, textarea, select {
+  font-family: var(--font-sans);
+  background: var(--bg-card-alt);
+  border: 1px solid var(--border-muted);
+  color: var(--text-pure);
+  padding: 12px 14px;
+  font-size: 14px;
   width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  border-radius: 3px;
+  margin-bottom: 14px;
 }
 
-/* Custom CSS Print Styling to prevent broken invoice scaling */
-@media print {
-  .no-print {
-    display: none !important;
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--gold-accent);
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* ---------- APP CONTAINER ---------- */
+.noor-app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- NAVIGATION ---------- */
+.noor-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+  background: var(--bg-card);
+  border-bottom: 2px solid var(--gold-accent);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+
+.noor-logo-text {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  color: var(--gold-accent);
+  letter-spacing: 1px;
+}
+
+.noor-logo-sub {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  color: var(--text-pure);
+  letter-spacing: 2px;
+  margin-top: -4px;
+}
+
+.noor-nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.noor-nav-links button {
+  background: transparent;
+  border: 1px solid var(--border-muted);
+  color: var(--text-gray);
+  padding: 8px 16px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 3px;
+  transition: all 0.25s ease;
+  min-height: 40px;
+}
+
+.noor-nav-links button:hover,
+.noor-nav-links button.active {
+  border-color: var(--gold-accent);
+  color: var(--gold-accent);
+  background: rgba(184, 134, 11, 0.08);
+}
+
+@media (min-width: 768px) {
+  .noor-nav {
+    flex-direction: row;
+    justify-content: space-between;
   }
- }
+}
+
+/* ---------- MAIN CONTENT ---------- */
+.noor-content {
+  flex: 1;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.section-headline {
+  font-size: 26px;
+  text-align: center;
+  margin-bottom: 24px;
+  letter-spacing: 1px;
+}
+
+.section-subtext {
+  color: var(--gold-accent);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 13px;
+  text-align: center;
+}
+
+/* ---------- HOME / FEATURES ---------- */
+.feature-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-top: 40px;
+  padding: 0 10px;
+}
+
+@media (min-width: 768px) {
+  .feature-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.feature-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-muted);
+  padding: 28px 22px;
+  text-align: center;
+  border-radius: 4px;
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  border-color: var(--gold-accent);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(184, 134, 11, 0.12);
+}
+
+.feature-icon {
+  color: var(--gold-accent);
+  margin-bottom: 14px;
+}
+
+.feature-title {
+  font-size: 17px;
+  margin-bottom: 10px;
+}
+
+.feature-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* ---------- GOLD BUTTON ---------- */
+.gold-btn {
+  background: var(--gold-accent);
+  color: #fff;
+  border: none;
+  padding: 13px 28px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 3px;
+  min-height: 44px;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.gold-btn:hover:not(:disabled) {
+  background: var(--gold-dark);
+  transform: translateY(-2px);
+}
+
+.gold-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ---------- PRODUCT GRID / CARDS ---------- */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+@media (min-width: 640px) {
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+}
+
+.product-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-muted);
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+  border-color: var(--gold-accent);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(184, 134, 11, 0.12);
+}
+
+.img-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  background: var(--bg-card-alt);
+}
+
+.img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tag-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(184, 134, 11, 0.92);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 2px;
+  letter-spacing: 0.5px;
+}
+
+.stock-status {
+  display: inline-block;
+  font-size: 11px;
+  padding: 10px 12px 0;
+  color: var(--text-muted);
+}
+
+.stock-in-stock { color: var(--status-success); }
+.stock-low { color: var(--gold-accent); }
+.stock-out { color: var(--status-error); }
+
+.prod-title {
+  font-size: 15px;
+  padding: 4px 12px 0;
+  margin-bottom: 12px;
+}
+
+.prod-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px 14px;
+  margin-top: auto;
+  gap: 10px;
+}
+
+.price-compare {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+.price-primary {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  color: var(--gold-accent);
+  font-weight: 600;
+}
+
+/* Quantity pill controls (shop + checkout) */
+.shop-action-pill,
+.qty-pill-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--border-muted);
+  border-radius: 20px;
+  padding: 4px 10px;
+}
+
+.shop-pill-btn,
+.qty-pill-btn {
+  background: transparent;
+  border: none;
+  color: var(--gold-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+}
+
+.shop-pill-digit,
+.qty-display-digit {
+  font-size: 13px;
+  color: var(--text-pure);
+  min-width: 16px;
+  text-align: center;
+}
+
+/* ---------- CHECKOUT ---------- */
+.checkout-box {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.alteration-container {
+  margin-top: 14px;
+  padding-top: 12px;
+}
+
+.alteration-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.upload-receipt-zone {
+  display: block;
+  border: 1.5px dashed var(--border-light);
+  border-radius: 4px;
+  padding: 20px;
+  cursor: pointer;
+  transition: border-color 0.25s ease;
+}
+
+.upload-receipt-zone:hover {
+  border-color: var(--gold-accent);
+}
+
+/* ---------- SEARCH / TRACKING ---------- */
+.search-wrapper {
+  display: flex;
+  gap: 10px;
+}
+
+.search-wrapper input {
+  margin-bottom: 0;
+  flex: 1;
+}
+
+.status-pending { background: rgba(184,134,11,0.15); color: var(--gold-accent); }
+.status-processing { background: rgba(59,110,165,0.15); color: var(--status-info); }
+.status-shipped { background: rgba(59,110,165,0.15); color: var(--status-info); }
+.status-delivered { background: rgba(47,125,79,0.15); color: var(--status-success); }
+.status-cancelled { background: rgba(179,58,58,0.15); color: var(--status-error); }
+
+/* ---------- SOCIAL / CONTACT ---------- */
+.social-matrix-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+@media (min-width: 640px) {
+  .social-matrix-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.social-card-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-muted);
+  color: var(--text-pure);
+  padding: 14px 18px;
+  border-radius: 4px;
+  font-size: 13px;
+  transition: border-color 0.25s ease;
+}
+
+.social-card-btn:hover {
+  border-color: var(--gold-accent);
+}
+
+/* ---------- ADMIN ---------- */
+.admin-login-fullscreen {
+  max-width: 380px;
+  margin: 60px auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border-muted);
+  padding: 36px 28px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.admin-input-style {
+  background: var(--bg-card-alt);
+  border: 1px solid var(--border-muted);
+  color: var(--text-pure);
+  padding: 12px 14px;
+  width: 100%;
+  margin-bottom: 14px;
+  border-radius: 3px;
+}
+
+.erp-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.erp-panel-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+@media (min-width: 768px) {
+  .erp-panel-header {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.metric-strip {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .metric-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.metric-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-muted);
+  padding: 18px;
+  border-radius: 4px;
+}
+
+.metric-val {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-pure);
+  margin-top: 4px;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 1024px) {
+  .admin-grid {
+    grid-template-columns: 1fr 1.4fr;
+  }
+}
+
+.admin-form-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-muted);
+  padding: 24px;
+  border-radius: 4px;
+}
+
+/* ---------- MISC ---------- */
+.remove-btn {
+  background: none;
+  border: none;
+}
+
+/* ---------- SHARED FLAT-LAY PHOTOGRAPHIC BACKGROUND ---------- */
+.flatlay-bg {
+  position: relative;
+  background-image: url('./assets/hero-bg.png');
+  background-repeat: repeat;
+  background-attachment: scroll;
+  overflow: hidden;
+  width: 100%;
+}
+
+.flatlay-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(245, 239, 228, 0.88);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.flatlay-bg > * {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 640px) {
+  .flatlay-bg::before {
+    background: rgba(245, 239, 228, 0.93);
+  }
+
+  .flatlay-bg {
+    background-position: center top;
+  }
+}
+
+/* ---------- HERO SECTION BACKGROUND IMAGE ---------- */
+.hero-with-bg {
+  background-image: url('./assets/hero-bg.png');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  border-radius: 0 0 12px 12px;
+  overflow: hidden;
+  padding: 60px 20px !important;
+}
+
+.hero-with-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(245, 239, 228, 0.72);
+  z-index: 0;
+}
+
+.hero-with-bg > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- SHARED FLAT-LAY PHOTOGRAPHIC BACKGROUND (other sections) ---------- */
+.flatlay-bg {
+  position: relative;
+  background-image: url('./assets/hero-bg.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: scroll;
+  overflow: hidden;
+  width: 100%;
+}
+
+.flatlay-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(245, 239, 228, 0.88);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.flatlay-bg > * {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 640px) {
+  .flatlay-bg::before {
+    background: rgba(245, 239, 228, 0.93);
+  }
+
+  .flatlay-bg {
+    background-position: center top;
+  }
+}
+
+
+
+.hero-coded {
+  position: relative;
+  background: var(--bg-page);
+  padding: 70px 20px 60px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.hero-logo-badge {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 20px;
+  border: 2px solid var(--gold-accent);
+  box-shadow: 0 6px 20px rgba(184, 134, 11, 0.25);
+}
+
+.hero-logo-badge img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.15);
+}
+
+.hero-wordmark {
+  font-family: var(--font-serif);
+  font-size: clamp(28px, 6vw, 48px);
+  letter-spacing: 6px;
+  color: var(--gold-accent);
+  text-transform: uppercase;
+  margin: 0 0 6px 0;
+  font-weight: 500;
+}
+
+.hero-corner {
+  position: absolute !important;
+  width: 90px;
+  height: 90px;
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-corner svg {
+  width: 100%;
+  height: 100%;
+}
+
+.hero-corner-tl { top: 14px; left: 14px; }
+.hero-corner-tr { top: 14px; right: 14px; transform: scaleX(-1); }
+.hero-corner-bl { bottom: 14px; left: 14px; transform: scaleY(-1); }
+.hero-corner-br { bottom: 14px; right: 14px; transform: scale(-1, -1); }
+
+@media (max-width: 640px) {
+  .hero-corner { width: 50px; height: 50px; }
+}
+
+.hero-sparkle {
+  position: absolute;
+  color: var(--gold-accent);
+  opacity: 0.6;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-sparkle-1 { top: 22%; left: 8%; }
+.hero-sparkle-2 { top: 65%; left: 12%; }
+.hero-sparkle-3 { top: 18%; right: 9%; }
+.hero-sparkle-4 { top: 60%; right: 7%; }
+
+@media (max-width: 640px) {
+  .hero-sparkle-2, .hero-sparkle-4 { display: none; }
+}
+
+.hero-coded > * {
+  position: relative;
+  z-index: 1;
+}
+
+.noor-logo-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.noor-logo-img {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1.5px solid var(--gold-accent);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.noor-logo-text-group {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+@media (max-width: 480px) {
+  .noor-logo-img {
+    width: 34px;
+    height: 34px;
+  }
+}

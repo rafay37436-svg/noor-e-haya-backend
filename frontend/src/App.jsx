@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { 
   ShoppingBag, Star, Trash2, Shield, Package, ShoppingCart, 
   TrendingUp, DollarSign, PlusCircle, LogOut, Settings, Phone, 
-  MapPin, Clock, MessageSquare, Search, Edit2, CheckCircle, RefreshCw, Scissors, Plus, Minus, X, Upload, FileText, Image
+  MapPin, Clock, MessageSquare, Search, Edit2, CheckCircle, RefreshCw, Scissors, Plus, Minus, X, Upload, FileText, Image, AlertTriangle, Download, Award
 } from "lucide-react";
+import logoIcon from './assets/logo-icon.png';
 
 const INITIAL_PRODUCTS = [
   {
@@ -81,6 +82,11 @@ export default function App() {
   const [currentEditId, setCurrentEditId] = useState(null);
   const [productForm, setProductForm] = useState({ name: "", price: "", comparePrice: "", color: "", tag: "New Drops", stock: 15, image: "" });
   const [profileForm, setProfileForm] = useState({ ...brandProfile });
+
+  // ---- NEW: Admin dashboard extra controls ----
+  const [orderSearchQuery, setOrderSearchQuery] = useState("");
+  const [orderStatusFilter, setOrderStatusFilter] = useState("All");
+  const [adminTab, setAdminTab] = useState("overview"); // overview | inventory | orders | settings
 
   // Persist data to localStorage
   useEffect(() => { localStorage.setItem("noor_products", JSON.stringify(products)); }, [products]);
@@ -264,6 +270,59 @@ export default function App() {
   const totalCartUnits = cart.reduce((sum, item) => sum + item.qty, 0);
   const totalRevenue = orders.reduce((sum, o) => o.status !== "Cancelled" ? sum + o.total : sum, 0);
 
+  // ---- NEW: Computed values for admin dashboard ----
+
+  const lowStockItems = useMemo(() => products.filter(p => p.stock <= 3), [products]);
+
+  const bestSellers = useMemo(() => {
+    const salesMap = {};
+    orders.forEach(o => {
+      if (o.status === "Cancelled") return;
+      o.items.forEach(it => {
+        salesMap[it.id] = salesMap[it.id] || { name: it.name, unitsSold: 0 };
+        salesMap[it.id].unitsSold += it.qty;
+      });
+    });
+    return Object.values(salesMap).sort((a, b) => b.unitsSold - a.unitsSold).slice(0, 5);
+  }, [orders]);
+
+  const filteredOrders = useMemo(() => {
+    return orders.filter(o => {
+      const matchesStatus = orderStatusFilter === "All" || o.status === orderStatusFilter;
+      const q = orderSearchQuery.trim().toLowerCase();
+      const matchesSearch = !q || o.orderId.toLowerCase().includes(q) || o.customer.name.toLowerCase().includes(q);
+      return matchesStatus && matchesSearch;
+    });
+  }, [orders, orderSearchQuery, orderStatusFilter]);
+
+  const handleExportOrdersCSV = () => {
+    if (orders.length === 0) return alert("No orders to export yet.");
+    const headers = ["Order ID", "Customer Name", "Phone", "City", "Payment Method", "Items", "Total (PKR)", "Status", "Date"];
+    const rows = orders.map(o => [
+      o.orderId,
+      o.customer.name,
+      o.customer.phone,
+      o.customer.city,
+      o.customer.paymentMethod,
+      o.items.map(it => `${it.name} (x${it.qty})`).join(" | "),
+      o.total,
+      o.status,
+      o.date
+    ]);
+    const csvContent = [headers, ...rows]
+      .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(","))
+      .join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `noor-e-haya-orders-${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   // ==================== RENDERING ====================
 
   return (
@@ -287,9 +346,12 @@ export default function App() {
 
       {/* NAVIGATION */}
       <nav className="noor-nav" role="navigation" aria-label="Main navigation">
-        <div onClick={() => setCurrentPage("home")} role="button" tabIndex="0" onKeyPress={(e) => e.key === "Enter" && setCurrentPage("home")} aria-label="Noor-e-Haya Home">
-          <div className="noor-logo-text">نور حیا</div>
-          <div className="noor-logo-sub">Noor e Haya</div>
+        <div className="noor-logo-group" onClick={() => setCurrentPage("home")} role="button" tabIndex="0" onKeyPress={(e) => e.key === "Enter" && setCurrentPage("home")} aria-label="Noor-e-Haya Home">
+          <img src={logoIcon} alt="Noor-e-Haya" className="noor-logo-img" />
+          <div className="noor-logo-text-group">
+            <div className="noor-logo-text">نور حیا</div>
+            <div className="noor-logo-sub">Noor e Haya</div>
+          </div>
         </div>
 
         <div className="noor-nav-links">
@@ -306,7 +368,47 @@ export default function App() {
         {/* ==================== HOME PAGE ==================== */}
         {currentPage === "home" && (
           <div>
-            <section className="text-center" style={{ padding: "50px 20px 20px 20px" }}>
+            <section className="hero-coded">
+              <div className="hero-corner hero-corner-tl">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 5 L5 40 M5 5 L40 5" stroke="var(--gold-accent)" strokeWidth="1.5"/>
+                  <path d="M5 20 Q25 20 25 5" stroke="var(--gold-accent)" strokeWidth="1"/>
+                  <circle cx="5" cy="5" r="3" fill="var(--gold-accent)"/>
+                </svg>
+              </div>
+              <div className="hero-corner hero-corner-tr">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 5 L5 40 M5 5 L40 5" stroke="var(--gold-accent)" strokeWidth="1.5"/>
+                  <path d="M5 20 Q25 20 25 5" stroke="var(--gold-accent)" strokeWidth="1"/>
+                  <circle cx="5" cy="5" r="3" fill="var(--gold-accent)"/>
+                </svg>
+              </div>
+              <div className="hero-corner hero-corner-bl">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 5 L5 40 M5 5 L40 5" stroke="var(--gold-accent)" strokeWidth="1.5"/>
+                  <path d="M5 20 Q25 20 25 5" stroke="var(--gold-accent)" strokeWidth="1"/>
+                  <circle cx="5" cy="5" r="3" fill="var(--gold-accent)"/>
+                </svg>
+              </div>
+              <div className="hero-corner hero-corner-br">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 5 L5 40 M5 5 L40 5" stroke="var(--gold-accent)" strokeWidth="1.5"/>
+                  <path d="M5 20 Q25 20 25 5" stroke="var(--gold-accent)" strokeWidth="1"/>
+                  <circle cx="5" cy="5" r="3" fill="var(--gold-accent)"/>
+                </svg>
+              </div>
+
+              <Star className="hero-sparkle hero-sparkle-1" size={18} fill="currentColor" aria-hidden="true" />
+              <Star className="hero-sparkle hero-sparkle-2" size={14} fill="currentColor" aria-hidden="true" />
+              <Star className="hero-sparkle hero-sparkle-3" size={16} fill="currentColor" aria-hidden="true" />
+              <Star className="hero-sparkle hero-sparkle-4" size={20} fill="currentColor" aria-hidden="true" />
+
+              <div className="hero-logo-badge">
+                <img src={logoIcon} alt="Noor-e-Haya logo" />
+              </div>
+
+              <h2 className="hero-wordmark">Noor e Haya</h2>
+
               <p className="section-subtext">Luxury Modest Wear Collection</p>
               <h1>Where Grace Meets Modesty</h1>
               <p>
@@ -315,7 +417,7 @@ export default function App() {
               <button onClick={() => setCurrentPage("shop")} className="gold-btn">Explore Full Catalog</button>
             </section>
 
-            <section className="feature-grid">
+            <section className="feature-grid flatlay-bg">
               <article className="feature-card">
                 <Scissors className="feature-icon" size={26} aria-hidden="true" />
                 <h3 className="feature-title">Bespoke Custom Alterations</h3>
@@ -343,7 +445,7 @@ export default function App() {
 
         {/* ==================== SHOP PAGE ==================== */}
         {currentPage === "shop" && (
-          <section>
+          <section className="flatlay-bg">
             <h2 className="section-headline">The Active Catalog</h2>
             <div className="product-grid" role="region" aria-label="Product catalog">
               {products.map((prod) => {
@@ -403,7 +505,7 @@ export default function App() {
 
         {/* ==================== CHECKOUT PAGE ==================== */}
         {currentPage === "checkout" && (
-          <section>
+          <section className="flatlay-bg">
             <h2 className="section-headline">Your Selection Bag</h2>
             {cart.length === 0 ? (
               <div className="text-center" style={{ padding: "60px", background: "var(--bg-card)", border: "1px solid var(--border-muted)" }} role="status" aria-live="polite">
@@ -604,7 +706,7 @@ export default function App() {
 
         {/* ==================== CONTACT & TRACKING PAGE ==================== */}
         {currentPage === "contact" && (
-          <section>
+          <section className="flatlay-bg">
             <h2 className="section-headline">Customer Care Portal</h2>
             <p className="section-subtext">Monitor real-time transit logs or evaluate cash-back return warranties instantly.</p>
 
@@ -729,6 +831,16 @@ export default function App() {
                   </button>
                 </div>
 
+                {/* ---- NEW: Low stock alert banner ---- */}
+                {lowStockItems.length > 0 && (
+                  <div style={{ background: "rgba(212,175,55,0.1)", border: "1px solid var(--gold-accent, #D4AF37)", padding: "14px 18px", borderRadius: "4px", display: "flex", alignItems: "center", gap: "10px" }} role="alert">
+                    <AlertTriangle size={18} style={{ color: "#D4AF37", flexShrink: 0 }} aria-hidden="true" />
+                    <span style={{ color: "#E2E8F0", fontSize: "13px" }}>
+                      <strong>{lowStockItems.length} item{lowStockItems.length > 1 ? "s" : ""}</strong> running low on stock: {lowStockItems.map(p => p.name).join(", ")}
+                    </span>
+                  </div>
+                )}
+
                 <div className="metric-strip">
                   <div className="metric-card">
                     <div style={{ background: "rgba(59,130,246,0.1)", color: "var(--status-info)", padding: "12px", borderRadius: "6px" }}><DollarSign size={20} aria-hidden="true" /></div>
@@ -740,70 +852,239 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="admin-grid">
-                  <div>
-                    <div className="admin-form-box">
-                      <h3 style={{ color: "white", fontSize: "14px", margin: "0 0 15px 0" }}><PlusCircle size={15} aria-hidden="true" /> {isEditing ? "Modify Collection Article Specs" : "Launch New Catalog Article"}</h3>
-                      <form onSubmit={handleSaveProduct}>
-                        <input required placeholder="Abaya Title" value={productForm.name} onChange={(e) => setProductForm({...productForm, name: e.target.value})} className="admin-input-style" aria-label="Product name" />
-                        <input required type="number" placeholder="Actual Retail Selling Price" value={productForm.price} onChange={(e) => setProductForm({...productForm, price: e.target.value})} className="admin-input-style" aria-label="Selling price" />
-                        <input type="number" placeholder="Original Price to cross out" value={productForm.comparePrice} onChange={(e) => setProductForm({...productForm, comparePrice: e.target.value})} className="admin-input-style" aria-label="Compare price" />
-                        <input placeholder="Color Matrix Tint" value={productForm.color} onChange={(e) => setProductForm({...productForm, color: e.target.value})} className="admin-input-style" aria-label="Product color" />
-                        <input placeholder="Image Link URL" value={productForm.image} onChange={(e) => setProductForm({...productForm, image: e.target.value})} className="admin-input-style" aria-label="Image URL" />
-                        <input type="number" placeholder="Production Stock Allocation units" value={productForm.stock} onChange={(e) => setProductForm({...productForm, stock: e.target.value})} className="admin-input-style" aria-label="Stock quantity" />
-                        <button type="submit" className="gold-btn" style={{ width: "100%" }}>{isEditing ? "Update Core Specs" : "Publish Live Layer"}</button>
-                      </form>
+                {/* ---- NEW: Admin tab navigation ---- */}
+                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", borderBottom: "1px solid #1E293B", paddingBottom: "12px" }}>
+                  {[
+                    { key: "overview", label: "Overview" },
+                    { key: "inventory", label: "Inventory" },
+                    { key: "orders", label: "Orders" },
+                    { key: "settings", label: "Brand Settings" }
+                  ].map(tab => (
+                    <button
+                      key={tab.key}
+                      onClick={() => setAdminTab(tab.key)}
+                      style={{
+                        background: adminTab === tab.key ? "var(--gold-accent, #D4AF37)" : "#1E293B",
+                        color: adminTab === tab.key ? "#111" : "#E2E8F0",
+                        border: "none",
+                        padding: "8px 16px",
+                        fontSize: "12px",
+                        fontWeight: 600,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.5px",
+                        borderRadius: "3px",
+                        cursor: "pointer"
+                      }}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* ---- OVERVIEW TAB: Add product + Best sellers ---- */}
+                {adminTab === "overview" && (
+                  <div className="admin-grid">
+                    <div>
+                      <div className="admin-form-box">
+                        <h3 style={{ color: "white", fontSize: "14px", margin: "0 0 15px 0" }}><PlusCircle size={15} aria-hidden="true" /> {isEditing ? "Modify Collection Article Specs" : "Launch New Catalog Article"}</h3>
+                        <form onSubmit={handleSaveProduct}>
+                          <input required placeholder="Abaya Title" value={productForm.name} onChange={(e) => setProductForm({...productForm, name: e.target.value})} className="admin-input-style" aria-label="Product name" />
+                          <input required type="number" placeholder="Actual Retail Selling Price" value={productForm.price} onChange={(e) => setProductForm({...productForm, price: e.target.value})} className="admin-input-style" aria-label="Selling price" />
+                          <input type="number" placeholder="Original Price to cross out" value={productForm.comparePrice} onChange={(e) => setProductForm({...productForm, comparePrice: e.target.value})} className="admin-input-style" aria-label="Compare price" />
+                          <input placeholder="Color Matrix Tint" value={productForm.color} onChange={(e) => setProductForm({...productForm, color: e.target.value})} className="admin-input-style" aria-label="Product color" />
+                          <input placeholder="Image Link URL" value={productForm.image} onChange={(e) => setProductForm({...productForm, image: e.target.value})} className="admin-input-style" aria-label="Image URL" />
+                          <input type="number" placeholder="Production Stock Allocation units" value={productForm.stock} onChange={(e) => setProductForm({...productForm, stock: e.target.value})} className="admin-input-style" aria-label="Stock quantity" />
+                          <button type="submit" className="gold-btn" style={{ width: "100%" }}>{isEditing ? "Update Core Specs" : "Publish Live Layer"}</button>
+                        </form>
+                      </div>
                     </div>
-                  </div>
 
-                  <div>
-                    <div style={{ background: "#0F172A", padding: "25px", border: "1px solid #1E293B" }}>
-                      <h3 style={{ color: "white", fontSize: "14px", margin: "0 0 15px 0" }}>Order Log Pipeline Ledger ({orders.length})</h3>
-                      <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                        {orders.map((o) => (
-                          <article key={o.orderId} style={{ background: "#020617", padding: "15px", border: "1px solid #1E293B" }}>
-                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                              <div>
-                                <span style={{ fontFamily: "monospace", color: "var(--status-info)", fontWeight: "bold" }}>{o.orderId}</span>
-                                <span style={{ fontSize: "12px", color: "var(--text-muted)", marginLeft: "10px" }}>{o.customer.name} ({o.customer.paymentMethod})</span>
+                    <div>
+                      <div style={{ background: "#0F172A", padding: "25px", border: "1px solid #1E293B" }}>
+                        <h3 style={{ color: "white", fontSize: "14px", margin: "0 0 15px 0", display: "flex", alignItems: "center", gap: "8px" }}><Award size={16} aria-hidden="true" /> Best-Selling Articles</h3>
+                        {bestSellers.length === 0 ? (
+                          <p style={{ color: "var(--text-muted)", fontSize: "12px" }}>No sales recorded yet.</p>
+                        ) : (
+                          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                            {bestSellers.map((item, idx) => (
+                              <div key={idx} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", background: "#020617", padding: "12px 15px", border: "1px solid #1E293B" }}>
+                                <span style={{ color: "#E2E8F0", fontSize: "13px" }}>
+                                  <span style={{ color: "var(--gold-accent, #D4AF37)", fontWeight: "bold", marginRight: "8px" }}>#{idx + 1}</span>
+                                  {item.name}
+                                </span>
+                                <span style={{ color: "var(--status-success)", fontSize: "12px", fontWeight: "bold" }}>{item.unitsSold} sold</span>
                               </div>
-                              <select 
-                                value={o.status} 
-                                onChange={(e) => updateOrderStatus(o.orderId, e.target.value)} 
-                                style={{ background: "#0F172A", border: "1px solid #334155", color: "white", fontSize: "12px", padding: "4px" }}
-                                aria-label={`Update ${o.orderId} status`}
-                              >
-                                <option value="Pending">Pending</option>
-                                <option value="Processing">In Production</option>
-                                <option value="Shipped">Dispatched</option>
-                                <option value="Delivered">Delivered</option>
-                                <option value="Cancelled">Cancelled</option>
-                              </select>
-                            </div>
-
-                            {o.receiptImage && (
-                              <div style={{ marginTop: "10px", padding: "8px", background: "#0F172A", border: "1px solid #334155" }}>
-                                <span style={{ fontSize: "11px", color: "var(--gold-accent)", display: "block", marginBottom: "5px" }}>🖼️ Client Bank Proof Attachment:</span>
-                                <a href={o.receiptImage} target="_blank" rel="noreferrer">
-                                  <img src={o.receiptImage} alt="Payment proof for order" style={{ maxHeight: "100px", maxWidth: "100%", cursor: "zoom-in" }} />
-                                </a>
-                              </div>
-                            )}
-
-                            <div style={{ background: "#0F172A", padding: "10px", marginTop: "10px" }}>
-                              {o.items.map((it, idx) => (
-                                <p key={idx} style={{ margin: 0, fontSize: "12px", color: "#E2E8F0" }}>
-                                  • {it.name} (x{it.qty}) {it.needsAlterations ? `➔ [L: ${it.customLength}", B: ${it.customBust}"]` : ""}
-                                </p>
-                              ))}
-                            </div>
-                            <div style={{ textAlign: "right", fontSize: "13px", fontWeight: "bold", color: "var(--status-success)", marginTop: "5px" }}>Rs. {o.total.toLocaleString()}</div>
-                          </article>
-                        ))}
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
-                </div>
+                )}
+
+                {/* ---- INVENTORY TAB ---- */}
+                {adminTab === "inventory" && (
+                  <div style={{ background: "#0F172A", padding: "25px", border: "1px solid #1E293B" }}>
+                    <h3 style={{ color: "white", fontSize: "14px", margin: "0 0 15px 0" }}>Inventory Overview ({products.length} Articles)</h3>
+                    <div className="scrollable-table-wrapper">
+                      <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "13px" }}>
+                        <thead>
+                          <tr style={{ borderBottom: "1px solid #334155", textAlign: "left" }}>
+                            <th style={{ padding: "10px", color: "var(--text-muted)" }}>Article</th>
+                            <th style={{ padding: "10px", color: "var(--text-muted)" }}>Color</th>
+                            <th style={{ padding: "10px", color: "var(--text-muted)" }}>Price</th>
+                            <th style={{ padding: "10px", color: "var(--text-muted)" }}>Stock</th>
+                            <th style={{ padding: "10px", color: "var(--text-muted)" }}>Status</th>
+                            <th style={{ padding: "10px", color: "var(--text-muted)" }}>Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {[...products].sort((a, b) => a.stock - b.stock).map(prod => (
+                            <tr key={prod.id} style={{ borderBottom: "1px solid #1E293B" }}>
+                              <td style={{ padding: "10px", color: "#E2E8F0" }}>{prod.name}</td>
+                              <td style={{ padding: "10px", color: "var(--text-muted)" }}>{prod.color}</td>
+                              <td style={{ padding: "10px", color: "var(--gold-accent, #D4AF37)" }}>Rs. {prod.price.toLocaleString()}</td>
+                              <td style={{ padding: "10px", color: "#E2E8F0", fontWeight: "bold" }}>{prod.stock}</td>
+                              <td style={{ padding: "10px" }}>
+                                <span style={{
+                                  fontSize: "11px",
+                                  padding: "3px 8px",
+                                  borderRadius: "3px",
+                                  background: prod.stock === 0 ? "rgba(239,68,68,0.15)" : prod.stock <= 3 ? "rgba(212,175,55,0.15)" : "rgba(34,197,94,0.15)",
+                                  color: prod.stock === 0 ? "var(--status-error)" : prod.stock <= 3 ? "var(--gold-accent, #D4AF37)" : "var(--status-success)"
+                                }}>
+                                  {prod.stock === 0 ? "Out of Stock" : prod.stock <= 3 ? "Low Stock" : "Healthy"}
+                                </span>
+                              </td>
+                              <td style={{ padding: "10px", display: "flex", gap: "8px" }}>
+                                <button onClick={() => { startEditProduct(prod); setAdminTab("overview"); }} style={{ background: "none", border: "1px solid #334155", color: "var(--status-info)", padding: "5px 8px", cursor: "pointer", borderRadius: "3px" }} aria-label={`Edit ${prod.name}`}>
+                                  <Edit2 size={13} aria-hidden="true" />
+                                </button>
+                                <button onClick={() => deleteProduct(prod.id)} style={{ background: "none", border: "1px solid #334155", color: "var(--status-error)", padding: "5px 8px", cursor: "pointer", borderRadius: "3px" }} aria-label={`Delete ${prod.name}`}>
+                                  <Trash2 size={13} aria-hidden="true" />
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* ---- ORDERS TAB ---- */}
+                {adminTab === "orders" && (
+                  <div style={{ background: "#0F172A", padding: "25px", border: "1px solid #1E293B" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px", marginBottom: "18px" }}>
+                      <h3 style={{ color: "white", fontSize: "14px", margin: 0 }}>Order Log Pipeline Ledger ({filteredOrders.length} of {orders.length})</h3>
+                      <button onClick={handleExportOrdersCSV} style={{ background: "#1E293B", color: "var(--gold-accent, #D4AF37)", border: "1px solid #334155", display: "flex", alignItems: "center", gap: "6px", padding: "8px 14px", fontSize: "12px", cursor: "pointer", borderRadius: "3px" }}>
+                        <Download size={14} aria-hidden="true" /> Export CSV
+                      </button>
+                    </div>
+
+                    <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginBottom: "18px" }}>
+                      <input
+                        placeholder="Search by name or invoice ID..."
+                        value={orderSearchQuery}
+                        onChange={(e) => setOrderSearchQuery(e.target.value)}
+                        style={{ flex: 1, minWidth: "200px", background: "#020617", border: "1px solid #334155", color: "white", padding: "10px 12px", fontSize: "13px", borderRadius: "3px" }}
+                        aria-label="Search orders"
+                      />
+                      <select
+                        value={orderStatusFilter}
+                        onChange={(e) => setOrderStatusFilter(e.target.value)}
+                        style={{ background: "#020617", border: "1px solid #334155", color: "white", padding: "10px 12px", fontSize: "13px", borderRadius: "3px" }}
+                        aria-label="Filter by status"
+                      >
+                        <option value="All">All Statuses</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Processing">In Production</option>
+                        <option value="Shipped">Dispatched</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="Cancelled">Cancelled</option>
+                      </select>
+                    </div>
+
+                    <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                      {filteredOrders.length === 0 ? (
+                        <p style={{ color: "var(--text-muted)", fontSize: "13px" }}>No orders match your search/filter.</p>
+                      ) : filteredOrders.map((o) => (
+                        <article key={o.orderId} style={{ background: "#020617", padding: "15px", border: "1px solid #1E293B" }}>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                            <div>
+                              <span style={{ fontFamily: "monospace", color: "var(--status-info)", fontWeight: "bold" }}>{o.orderId}</span>
+                              <span style={{ fontSize: "12px", color: "var(--text-muted)", marginLeft: "10px" }}>{o.customer.name} ({o.customer.paymentMethod})</span>
+                            </div>
+                            <select 
+                              value={o.status} 
+                              onChange={(e) => updateOrderStatus(o.orderId, e.target.value)} 
+                              style={{ background: "#0F172A", border: "1px solid #334155", color: "white", fontSize: "12px", padding: "4px" }}
+                              aria-label={`Update ${o.orderId} status`}
+                            >
+                              <option value="Pending">Pending</option>
+                              <option value="Processing">In Production</option>
+                              <option value="Shipped">Dispatched</option>
+                              <option value="Delivered">Delivered</option>
+                              <option value="Cancelled">Cancelled</option>
+                            </select>
+                          </div>
+
+                          {o.receiptImage && (
+                            <div style={{ marginTop: "10px", padding: "8px", background: "#0F172A", border: "1px solid #334155" }}>
+                              <span style={{ fontSize: "11px", color: "var(--gold-accent)", display: "block", marginBottom: "5px" }}>🖼️ Client Bank Proof Attachment:</span>
+                              <a href={o.receiptImage} target="_blank" rel="noreferrer">
+                                <img src={o.receiptImage} alt="Payment proof for order" style={{ maxHeight: "100px", maxWidth: "100%", cursor: "zoom-in" }} />
+                              </a>
+                            </div>
+                          )}
+
+                          <div style={{ background: "#0F172A", padding: "10px", marginTop: "10px" }}>
+                            {o.items.map((it, idx) => (
+                              <p key={idx} style={{ margin: 0, fontSize: "12px", color: "#E2E8F0" }}>
+                                • {it.name} (x{it.qty}) {it.needsAlterations ? `➔ [L: ${it.customLength}", B: ${it.customBust}"]` : ""}
+                              </p>
+                            ))}
+                          </div>
+                          <div style={{ textAlign: "right", fontSize: "13px", fontWeight: "bold", color: "var(--status-success)", marginTop: "5px" }}>Rs. {o.total.toLocaleString()}</div>
+                        </article>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* ---- BRAND SETTINGS TAB ---- */}
+                {adminTab === "settings" && (
+                  <div className="admin-form-box" style={{ maxWidth: "600px" }}>
+                    <h3 style={{ color: "white", fontSize: "14px", margin: "0 0 15px 0", display: "flex", alignItems: "center", gap: "8px" }}><Settings size={15} aria-hidden="true" /> Brand & Contact Settings</h3>
+                    <form onSubmit={handleUpdateProfile}>
+                      <label style={{ fontSize: "11px", color: "var(--text-muted)", display: "block", marginBottom: "4px" }}>WhatsApp Number (with country code, no + or spaces)</label>
+                      <input placeholder="923001234567" value={profileForm.whatsappNumber} onChange={(e) => setProfileForm({...profileForm, whatsappNumber: e.target.value})} className="admin-input-style" aria-label="WhatsApp number" />
+
+                      <label style={{ fontSize: "11px", color: "var(--text-muted)", display: "block", marginBottom: "4px" }}>Instagram URL</label>
+                      <input placeholder="https://instagram.com/..." value={profileForm.instagramUrl} onChange={(e) => setProfileForm({...profileForm, instagramUrl: e.target.value})} className="admin-input-style" aria-label="Instagram URL" />
+
+                      <label style={{ fontSize: "11px", color: "var(--text-muted)", display: "block", marginBottom: "4px" }}>TikTok URL</label>
+                      <input placeholder="https://tiktok.com/@..." value={profileForm.tiktokUrl} onChange={(e) => setProfileForm({...profileForm, tiktokUrl: e.target.value})} className="admin-input-style" aria-label="TikTok URL" />
+
+                      <label style={{ fontSize: "11px", color: "var(--text-muted)", display: "block", marginBottom: "4px" }}>Bank Name</label>
+                      <input placeholder="Bank Name" value={profileForm.bankName} onChange={(e) => setProfileForm({...profileForm, bankName: e.target.value})} className="admin-input-style" aria-label="Bank name" />
+
+                      <label style={{ fontSize: "11px", color: "var(--text-muted)", display: "block", marginBottom: "4px" }}>Account Title</label>
+                      <input placeholder="Account Title" value={profileForm.accountTitle} onChange={(e) => setProfileForm({...profileForm, accountTitle: e.target.value})} className="admin-input-style" aria-label="Account title" />
+
+                      <label style={{ fontSize: "11px", color: "var(--text-muted)", display: "block", marginBottom: "4px" }}>IBAN</label>
+                      <input placeholder="IBAN" value={profileForm.iban} onChange={(e) => setProfileForm({...profileForm, iban: e.target.value})} className="admin-input-style" aria-label="IBAN" />
+
+                      <label style={{ fontSize: "11px", color: "var(--text-muted)", display: "block", marginBottom: "4px" }}>Studio Address</label>
+                      <textarea placeholder="Studio Address" value={profileForm.studioAddress} onChange={(e) => setProfileForm({...profileForm, studioAddress: e.target.value})} className="admin-input-style" aria-label="Studio address" />
+
+                      <label style={{ fontSize: "11px", color: "var(--text-muted)", display: "block", marginBottom: "4px" }}>Business Timings</label>
+                      <input placeholder="e.g. 1:00 PM - 10:00 PM" value={profileForm.timings} onChange={(e) => setProfileForm({...profileForm, timings: e.target.value})} className="admin-input-style" aria-label="Business timings" />
+
+                      <button type="submit" className="gold-btn" style={{ width: "100%", marginTop: "8px" }}>Save Brand Settings</button>
+                    </form>
+                  </div>
+                )}
               </div>
             )}
           </section>
@@ -811,7 +1092,7 @@ export default function App() {
       </main>
 
       {/* FOOTER */}
-      <footer>
+      <footer className="flatlay-bg">
         &copy; 2026 Noor-E-Haya Couture Luxury. All Rights Reserved. 
         <span onClick={() => { setCurrentPage("admin"); window.scrollTo(0, 0); }} role="button" tabIndex="0" onKeyPress={(e) => e.key === "Enter" && (setCurrentPage("admin"), window.scrollTo(0, 0))} aria-label="Admin access" style={{ cursor: "pointer", marginLeft: "12px" }}>🔑</span>
       </footer>
