@@ -1,10 +1,12 @@
+import abayaHero from './assets/abaya-hero.png';
+import logoIcon from './assets/logo-icon.png';
 import React, { useState, useEffect, useMemo } from "react";
 import { 
   ShoppingBag, Star, Trash2, Shield, Package, ShoppingCart, 
   TrendingUp, DollarSign, PlusCircle, LogOut, Settings, Phone, 
   MapPin, Clock, MessageSquare, Search, Edit2, CheckCircle, RefreshCw, Scissors, Plus, Minus, X, Upload, FileText, Image, AlertTriangle, Download, Award
 } from "lucide-react";
-import logoIcon from './assets/logo-icon.png';
+
 
 const INITIAL_PRODUCTS = [
   {
@@ -366,82 +368,50 @@ export default function App() {
       <main className="noor-content" role="main">
         
         {/* ==================== HOME PAGE ==================== */}
-        {currentPage === "home" && (
-          <div>
-            <section className="hero-coded">
-              <div className="hero-corner hero-corner-tl">
-                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M5 5 L5 40 M5 5 L40 5" stroke="var(--gold-accent)" strokeWidth="1.5"/>
-                  <path d="M5 20 Q25 20 25 5" stroke="var(--gold-accent)" strokeWidth="1"/>
-                  <circle cx="5" cy="5" r="3" fill="var(--gold-accent)"/>
-                </svg>
-              </div>
-              <div className="hero-corner hero-corner-tr">
-                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M5 5 L5 40 M5 5 L40 5" stroke="var(--gold-accent)" strokeWidth="1.5"/>
-                  <path d="M5 20 Q25 20 25 5" stroke="var(--gold-accent)" strokeWidth="1"/>
-                  <circle cx="5" cy="5" r="3" fill="var(--gold-accent)"/>
-                </svg>
-              </div>
-              <div className="hero-corner hero-corner-bl">
-                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M5 5 L5 40 M5 5 L40 5" stroke="var(--gold-accent)" strokeWidth="1.5"/>
-                  <path d="M5 20 Q25 20 25 5" stroke="var(--gold-accent)" strokeWidth="1"/>
-                  <circle cx="5" cy="5" r="3" fill="var(--gold-accent)"/>
-                </svg>
-              </div>
-              <div className="hero-corner hero-corner-br">
-                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M5 5 L5 40 M5 5 L40 5" stroke="var(--gold-accent)" strokeWidth="1.5"/>
-                  <path d="M5 20 Q25 20 25 5" stroke="var(--gold-accent)" strokeWidth="1"/>
-                  <circle cx="5" cy="5" r="3" fill="var(--gold-accent)"/>
-                </svg>
-              </div>
+        {/* ==================== FINAL HERO ==================== */}
+<section className="hero-new">
+  <div className="hero-new-watermark" aria-hidden="true">
+    <span>ABAYA · ABAYA · ABAYA · ABAYA</span>
+    <span>ABAYA · ABAYA · ABAYA · ABAYA</span>
+  </div>
 
-              <Star className="hero-sparkle hero-sparkle-1" size={18} fill="currentColor" aria-hidden="true" />
-              <Star className="hero-sparkle hero-sparkle-2" size={14} fill="currentColor" aria-hidden="true" />
-              <Star className="hero-sparkle hero-sparkle-3" size={16} fill="currentColor" aria-hidden="true" />
-              <Star className="hero-sparkle hero-sparkle-4" size={20} fill="currentColor" aria-hidden="true" />
+  <div className="hero-new-photo">
+    <img src={abayaHero} alt="Woman wearing a premium Noor-e-Haya abaya" />
+  </div>
 
-              <div className="hero-logo-badge">
-                <img src={logoIcon} alt="Noor-e-Haya logo" />
-              </div>
+  <div className="hero-new-content">
+    <div className="hero-new-brand-row">
+      <div className="hero-new-logo-badge">
+        <img src={logoIcon} alt="Noor-e-Haya logo" />
+      </div>
+      <span className="hero-new-category">Premium Abaya Collection</span>
+    </div>
 
-              <h2 className="hero-wordmark">Noor e Haya</h2>
+    <h1 className="hero-new-wordmark">Noor e Haya</h1>
+    <h2 className="hero-new-headline">
+      Elegant <span className="accent">abayas</span>, crafted with grace
+    </h2>
+    <p className="hero-new-desc">
+      Bespoke imported fabrics shaped into pristine fluid silhouettes. Crafted elegantly for premium look and daily flow.
+    </p>
+    <button onClick={() => setCurrentPage("shop")} className="gold-btn" style={{ marginBottom: "18px" }}>Explore Full Catalog</button>
 
-              <p className="section-subtext">Luxury Modest Wear Collection</p>
-              <h1>Where Grace Meets Modesty</h1>
-              <p>
-                Bespoke imported fabrics shaped into pristine fluid silhouettes. Crafted elegantly for premium look and daily flow.
-              </p>
-              <button onClick={() => setCurrentPage("shop")} className="gold-btn">Explore Full Catalog</button>
-            </section>
-
-            <section className="feature-grid flatlay-bg">
-              <article className="feature-card">
-                <Scissors className="feature-icon" size={26} aria-hidden="true" />
-                <h3 className="feature-title">Bespoke Custom Alterations</h3>
-                <p className="feature-desc">
-                  We value perfection. Select your exact abaya drop length and chest sizing specifications directly inside your selection bag for an immaculate fit.
-                </p>
-              </article>
-              <article className="feature-card">
-                <RefreshCw className="feature-icon" size={26} aria-hidden="true" />
-                <h3 className="feature-title">7-Day Cashback Guarantee</h3>
-                <p className="feature-desc">
-                  Shop with absolute assurance. We provide a complete 100% moneyback return and size alteration framework valid up to 7 full days from your tracking generation timestamp.
-                </p>
-              </article>
-              <article className="feature-card">
-                <CheckCircle className="feature-icon" size={26} aria-hidden="true" />
-                <h3 className="feature-title">Premium Imported Fabrics</h3>
-                <p className="feature-desc">
-                  Every Noor-E-Haya piece is meticulously tailored using premium Korean Nada and imported georgette weaves to assure light drapes and total opacity.
-                </p>
-              </article>
-            </section>
-          </div>
-        )}
+    <div className="hero-new-badges">
+      <div className="hero-new-badge">
+        <Scissors size={16} style={{ color: "var(--gold-accent)" }} aria-hidden="true" />
+        <span>Free Alterations</span>
+      </div>
+      <div className="hero-new-badge">
+        <RefreshCw size={16} style={{ color: "var(--gold-accent)" }} aria-hidden="true" />
+        <span>7-Day Returns</span>
+      </div>
+      <div className="hero-new-badge">
+        <CheckCircle size={16} style={{ color: "var(--gold-accent)" }} aria-hidden="true" />
+        <span>Premium Fabric</span>
+      </div>
+    </div>
+  </div>
+</section>
 
         {/* ==================== SHOP PAGE ==================== */}
         {currentPage === "shop" && (
