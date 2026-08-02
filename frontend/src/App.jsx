@@ -1,6 +1,6 @@
 import abayaHero from './assets/abaya-hero.png';
 import logoIcon from './assets/logo-icon.png';
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { 
   ShoppingBag, Star, Trash2, Shield, Package, ShoppingCart, 
   TrendingUp, DollarSign, PlusCircle, LogOut, Settings, Phone, 
@@ -85,14 +85,38 @@ export default function App() {
   const [productForm, setProductForm] = useState({ name: "", price: "", comparePrice: "", color: "", tag: "New Drops", stock: 15, image: "" });
   const [profileForm, setProfileForm] = useState({ ...brandProfile });
 
-  // ---- NEW: Admin dashboard extra controls ----
+  // ---- Admin dashboard extra controls ----
   const [orderSearchQuery, setOrderSearchQuery] = useState("");
   const [orderStatusFilter, setOrderStatusFilter] = useState("All");
   const [adminTab, setAdminTab] = useState("overview"); // overview | inventory | orders | settings
 
+  // ---- Hero 3D tilt + fade-in motion ----
+  const heroPhotoRef = useRef(null);
+  const [heroTilt, setHeroTilt] = useState({ x: 0, y: 0 });
+  const [heroVisible, setHeroVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setHeroVisible(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  function handleHeroMouseMove(e) {
+    const rect = heroPhotoRef.current.getBoundingClientRect();
+    const x = (e.clientY - rect.top - rect.height / 2) / 18;
+    const y = (e.clientX - rect.left - rect.width / 2) / -18;
+    setHeroTilt({ x, y });
+  }
+
+  function handleHeroMouseLeave() {
+    setHeroTilt({ x: 0, y: 0 });
+  }
+
   // Persist data to localStorage
   useEffect(() => { localStorage.setItem("noor_products", JSON.stringify(products)); }, [products]);
   useEffect(() => { localStorage.setItem("noor_cart", JSON.stringify(cart)); }, [cart]);
+  useEffect(() => {
+  window.scrollTo(0, 0);
+}, [currentPage]);
   useEffect(() => { localStorage.setItem("noor_orders", JSON.stringify(orders)); }, [orders]);
   useEffect(() => { localStorage.setItem("noor_brand_profile", JSON.stringify(brandProfile)); }, [brandProfile]);
 
@@ -272,7 +296,7 @@ export default function App() {
   const totalCartUnits = cart.reduce((sum, item) => sum + item.qty, 0);
   const totalRevenue = orders.reduce((sum, o) => o.status !== "Cancelled" ? sum + o.total : sum, 0);
 
-  // ---- NEW: Computed values for admin dashboard ----
+  // ---- Computed values for admin dashboard ----
 
   const lowStockItems = useMemo(() => products.filter(p => p.stock <= 3), [products]);
 
@@ -368,50 +392,98 @@ export default function App() {
       <main className="noor-content" role="main">
         
         {/* ==================== HOME PAGE ==================== */}
-        {/* ==================== FINAL HERO ==================== */}
-<section className="hero-new">
-  <div className="hero-new-watermark" aria-hidden="true">
-    <span>ABAYA · ABAYA · ABAYA · ABAYA</span>
-    <span>ABAYA · ABAYA · ABAYA · ABAYA</span>
+{currentPage === "home" && (
+  <div>
+    {/* ==================== FINAL HERO ==================== */}
+    <section className="hero-new">
+      <div className="hero-new-watermark" aria-hidden="true">
+        <span>ABAYA · ABAYA · ABAYA · ABAYA</span>
+        <span>ABAYA · ABAYA · ABAYA · ABAYA</span>
+      </div>
+
+      <div
+        className="hero-new-photo"
+        ref={heroPhotoRef}
+        onMouseMove={handleHeroMouseMove}
+        onMouseLeave={handleHeroMouseLeave}
+        style={{
+          transform: `perspective(1000px) rotateX(${heroTilt.x}deg) rotateY(${heroTilt.y}deg)`,
+        }}
+      >
+        <img src={abayaHero} alt="Woman wearing a premium Noor-e-Haya abaya" />
+      </div>
+
+      <div className={`hero-new-content ${heroVisible ? "hero-visible" : ""}`}>
+        <div className="hero-thumb-strip">
+          {products.slice(0, 4).map((prod) => (
+            <img
+              key={prod.id}
+              src={prod.image}
+              alt={prod.name}
+              onClick={() => setCurrentPage("shop")}
+            />
+          ))}
+        </div>
+
+        <div className="hero-new-brand-row">
+          <div className="hero-new-logo-badge">
+            <img src={logoIcon} alt="Noor-e-Haya logo" />
+          </div>
+          <span className="hero-new-category">Premium Abaya Collection</span>
+        </div>
+
+        <h1 className="hero-new-wordmark-abaya">Abaya</h1>
+        <p className="hero-new-subheading-urdu">نور حیاء</p>
+        <h2 className="hero-new-headline">
+          Elegant <span className="accent">abayas</span>, crafted with grace
+        </h2>
+        <p className="hero-new-desc">
+          Bespoke imported fabrics shaped into pristine fluid silhouettes. Crafted elegantly for premium look and daily flow.
+        </p>
+        <button onClick={() => setCurrentPage("shop")} className="gold-btn" style={{ marginBottom: "18px" }}>Explore Full Catalog</button>
+
+        <div className="hero-new-badges">
+          <div className="hero-new-badge">
+            <Scissors size={16} style={{ color: "var(--gold-accent)" }} aria-hidden="true" />
+            <span>Free Alterations</span>
+          </div>
+          <div className="hero-new-badge">
+            <RefreshCw size={16} style={{ color: "var(--gold-accent)" }} aria-hidden="true" />
+            <span>7-Day Returns</span>
+          </div>
+          <div className="hero-new-badge">
+            <CheckCircle size={16} style={{ color: "var(--gold-accent)" }} aria-hidden="true" />
+            <span>Premium Fabric</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section className="feature-grid flatlay-bg">
+      <article className="feature-card">
+        <Scissors className="feature-icon" size={26} aria-hidden="true" />
+        <h3 className="feature-title">Bespoke Custom Alterations</h3>
+        <p className="feature-desc">
+          We value perfection. Select your exact abaya drop length and chest sizing specifications directly inside your selection bag for an immaculate fit.
+        </p>
+      </article>
+      <article className="feature-card">
+        <RefreshCw className="feature-icon" size={26} aria-hidden="true" />
+        <h3 className="feature-title">7-Day Cashback Guarantee</h3>
+        <p className="feature-desc">
+          Shop with absolute assurance. We provide a complete 100% moneyback return and size alteration framework valid up to 7 full days from your tracking generation timestamp.
+        </p>
+      </article>
+      <article className="feature-card">
+        <CheckCircle className="feature-icon" size={26} aria-hidden="true" />
+        <h3 className="feature-title">Premium Imported Fabrics</h3>
+        <p className="feature-desc">
+          Every Noor-E-Haya piece is meticulously tailored using premium Korean Nada and imported georgette weaves to assure light drapes and total opacity.
+        </p>
+      </article>
+    </section>
   </div>
-
-  <div className="hero-new-photo">
-    <img src={abayaHero} alt="Woman wearing a premium Noor-e-Haya abaya" />
-  </div>
-
-  <div className="hero-new-content">
-    <div className="hero-new-brand-row">
-      <div className="hero-new-logo-badge">
-        <img src={logoIcon} alt="Noor-e-Haya logo" />
-      </div>
-      <span className="hero-new-category">Premium Abaya Collection</span>
-    </div>
-
-    <h1 className="hero-new-wordmark">Noor e Haya</h1>
-    <h2 className="hero-new-headline">
-      Elegant <span className="accent">abayas</span>, crafted with grace
-    </h2>
-    <p className="hero-new-desc">
-      Bespoke imported fabrics shaped into pristine fluid silhouettes. Crafted elegantly for premium look and daily flow.
-    </p>
-    <button onClick={() => setCurrentPage("shop")} className="gold-btn" style={{ marginBottom: "18px" }}>Explore Full Catalog</button>
-
-    <div className="hero-new-badges">
-      <div className="hero-new-badge">
-        <Scissors size={16} style={{ color: "var(--gold-accent)" }} aria-hidden="true" />
-        <span>Free Alterations</span>
-      </div>
-      <div className="hero-new-badge">
-        <RefreshCw size={16} style={{ color: "var(--gold-accent)" }} aria-hidden="true" />
-        <span>7-Day Returns</span>
-      </div>
-      <div className="hero-new-badge">
-        <CheckCircle size={16} style={{ color: "var(--gold-accent)" }} aria-hidden="true" />
-        <span>Premium Fabric</span>
-      </div>
-    </div>
-  </div>
-</section>
+)}
 
         {/* ==================== SHOP PAGE ==================== */}
         {currentPage === "shop" && (
@@ -801,7 +873,7 @@ export default function App() {
                   </button>
                 </div>
 
-                {/* ---- NEW: Low stock alert banner ---- */}
+                {/* Low stock alert banner */}
                 {lowStockItems.length > 0 && (
                   <div style={{ background: "rgba(212,175,55,0.1)", border: "1px solid var(--gold-accent, #D4AF37)", padding: "14px 18px", borderRadius: "4px", display: "flex", alignItems: "center", gap: "10px" }} role="alert">
                     <AlertTriangle size={18} style={{ color: "#D4AF37", flexShrink: 0 }} aria-hidden="true" />
@@ -822,7 +894,7 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* ---- NEW: Admin tab navigation ---- */}
+                {/* Admin tab navigation */}
                 <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", borderBottom: "1px solid #1E293B", paddingBottom: "12px" }}>
                   {[
                     { key: "overview", label: "Overview" },
@@ -851,7 +923,7 @@ export default function App() {
                   ))}
                 </div>
 
-                {/* ---- OVERVIEW TAB: Add product + Best sellers ---- */}
+                {/* OVERVIEW TAB: Add product + Best sellers */}
                 {adminTab === "overview" && (
                   <div className="admin-grid">
                     <div>
@@ -892,7 +964,7 @@ export default function App() {
                   </div>
                 )}
 
-                {/* ---- INVENTORY TAB ---- */}
+                {/* INVENTORY TAB */}
                 {adminTab === "inventory" && (
                   <div style={{ background: "#0F172A", padding: "25px", border: "1px solid #1E293B" }}>
                     <h3 style={{ color: "white", fontSize: "14px", margin: "0 0 15px 0" }}>Inventory Overview ({products.length} Articles)</h3>
@@ -942,7 +1014,7 @@ export default function App() {
                   </div>
                 )}
 
-                {/* ---- ORDERS TAB ---- */}
+                {/* ORDERS TAB */}
                 {adminTab === "orders" && (
                   <div style={{ background: "#0F172A", padding: "25px", border: "1px solid #1E293B" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px", marginBottom: "18px" }}>
@@ -1022,7 +1094,7 @@ export default function App() {
                   </div>
                 )}
 
-                {/* ---- BRAND SETTINGS TAB ---- */}
+                {/* BRAND SETTINGS TAB */}
                 {adminTab === "settings" && (
                   <div className="admin-form-box" style={{ maxWidth: "600px" }}>
                     <h3 style={{ color: "white", fontSize: "14px", margin: "0 0 15px 0", display: "flex", alignItems: "center", gap: "8px" }}><Settings size={15} aria-hidden="true" /> Brand & Contact Settings</h3>

@@ -277,7 +277,7 @@ nav {
 }
 
 /* ============================================
-   HERO SECTION
+   HERO SECTION (legacy .hero — not used by current hero-new markup)
    ============================================ */
 
 .hero {
@@ -1053,5 +1053,40 @@ footer {
 
   a:active {
     color: var(--gold-light);
+  }
+}
+
+/* ============================================
+   NEW: HERO-NEW 3D TILT + FADE-IN MOTION
+   These target the CURRENT hero markup classes
+   (.hero-new-photo, .hero-new-content) used in App.jsx.
+   NOTE: base layout/colors for .hero-new-* are NOT in this
+   file — they must live in whatever stylesheet actually
+   renders your current hero (find and merge there too).
+   ============================================ */
+
+.hero-new-photo {
+  transition: transform 0.15s ease-out;
+  transform-style: preserve-3d;
+  will-change: transform;
+  cursor: pointer;
+}
+
+.hero-new-content {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.hero-new-content.hero-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-new-photo,
+  .hero-new-content {
+    transition: none !important;
+    transform: none !important;
   }
 }
