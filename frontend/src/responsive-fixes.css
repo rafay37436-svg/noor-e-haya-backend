@@ -1,0 +1,143 @@
+/* ============================================
+   RESPONSIVE FIXES — whole site
+   Uses !important where needed to override
+   inline styles on Home page elements.
+   ============================================ */
+
+/* ---------- TABLET (max-width: 768px) ---------- */
+@media (max-width: 768px) {
+  .story-section {
+    grid-template-columns: 1fr !important;
+  }
+
+  .collection-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .admin-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .checkout-box {
+    grid-template-columns: 1fr !important;
+  }
+
+  .cart-item {
+    grid-template-columns: 80px 1fr !important;
+  }
+}
+
+/* ---------- MOBILE (max-width: 480px) ---------- */
+@media (max-width: 480px) {
+
+  .site-nav {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+    padding: 12px 16px !important;
+  }
+
+  .nav-links {
+    flex-wrap: wrap !important;
+    width: 100% !important;
+    gap: 4px !important;
+  }
+
+
+  .banner-section {
+    flex-direction: column !important;
+    justify-content: center !important;
+    text-align: center !important;
+    gap: 14px !important;
+    padding: 24px 20px !important;
+  }
+
+  .banner-abaya-text {
+    text-align: center !important;
+  }
+
+  .banner-welcome-text {
+    text-align: center !important;
+  }
+  
+  .nav-links button {
+    font-size: 10px !important;
+    padding: 6px 8px !important;
+  }
+
+  .banner-section {
+    min-height: 180px !important;
+  }
+
+  .story-section {
+    grid-template-columns: 1fr !important;
+    padding: 32px 18px !important;
+    gap: 20px !important;
+  }
+
+  .story-section > div:first-child {
+    min-height: 220px !important;
+  }
+
+  .offer-grid {
+    gap: 6px !important;
+  }
+
+  .offer-grid > div {
+    padding: 10px 4px !important;
+  }
+
+  .collection-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  .footer-contact-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .checkout-box {
+    grid-template-columns: 1fr !important;
+  }
+
+  .cart-item {
+    grid-template-columns: 70px 1fr !important;
+    gap: 12px !important;
+  }
+
+  .alteration-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .admin-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .metric-strip {
+    grid-template-columns: 1fr !important;
+  }
+
+  .erp-panel-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+  }
+
+  .scrollable-table-wrapper {
+    overflow-x: auto !important;
+  }
+
+  h1 {
+    font-size: 32px !important;
+  }
+
+  h2 {
+    font-size: 22px !important;
+  }
+}

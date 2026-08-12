@@ -1,5 +1,11 @@
 import abayaHero from './assets/abaya-hero.png';
 import logoIcon from './assets/logo-icon.png';
+import fabricBanner from './assets/fabric-banner.jpg';
+import storyBanner from './assets/story-banner.jpg';
+import productBeige from './assets/product-beige.webp';
+import productIvory from './assets/product-ivory.webp';
+import productBlack from './assets/product-black.webp';
+import './responsive-fixes.css';
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { 
   ShoppingBag, Star, Trash2, Shield, Package, ShoppingCart, 
@@ -16,7 +22,7 @@ const INITIAL_PRODUCTS = [
     comparePrice: 11000,
     tag: "Bestseller",
     color: "Midnight Black",
-    image: "https://images.unsplash.com/photo-1662806407800-56793fa8e924?w=600&h=800&fit=crop&auto=format",
+    image: productBlack,
     stock: 24
   },
   {
@@ -26,7 +32,7 @@ const INITIAL_PRODUCTS = [
     comparePrice: 15500,
     tag: "New Drops",
     color: "Deep Navy",
-    image: "https://images.unsplash.com/photo-1730454752575-88d6307f5579?w=600&h=800&fit=crop&auto=format",
+    image: productIvory,
     stock: 15
   },
   {
@@ -36,7 +42,7 @@ const INITIAL_PRODUCTS = [
     comparePrice: 13000,
     tag: "Premium Line",
     color: "Charcoal Grey",
-    image: "https://images.unsplash.com/photo-1682685797498-3bad2c6e161a?w=600&h=800&fit=crop&auto=format",
+    image: productBeige,
     stock: 8
   }
 ];
@@ -85,33 +91,10 @@ export default function App() {
   const [productForm, setProductForm] = useState({ name: "", price: "", comparePrice: "", color: "", tag: "New Drops", stock: 15, image: "" });
   const [profileForm, setProfileForm] = useState({ ...brandProfile });
 
-  // ---- Admin dashboard extra controls ----
   const [orderSearchQuery, setOrderSearchQuery] = useState("");
   const [orderStatusFilter, setOrderStatusFilter] = useState("All");
-  const [adminTab, setAdminTab] = useState("overview"); // overview | inventory | orders | settings
+  const [adminTab, setAdminTab] = useState("overview");
 
-  // ---- Hero 3D tilt + fade-in motion ----
-  const heroPhotoRef = useRef(null);
-  const [heroTilt, setHeroTilt] = useState({ x: 0, y: 0 });
-  const [heroVisible, setHeroVisible] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setHeroVisible(true), 100);
-    return () => clearTimeout(timer);
-  }, []);
-
-  function handleHeroMouseMove(e) {
-    const rect = heroPhotoRef.current.getBoundingClientRect();
-    const x = (e.clientY - rect.top - rect.height / 2) / 18;
-    const y = (e.clientX - rect.left - rect.width / 2) / -18;
-    setHeroTilt({ x, y });
-  }
-
-  function handleHeroMouseLeave() {
-    setHeroTilt({ x: 0, y: 0 });
-  }
-
-  // Persist data to localStorage
   useEffect(() => { localStorage.setItem("noor_products", JSON.stringify(products)); }, [products]);
   useEffect(() => { localStorage.setItem("noor_cart", JSON.stringify(cart)); }, [cart]);
   useEffect(() => {
@@ -120,7 +103,6 @@ export default function App() {
   useEffect(() => { localStorage.setItem("noor_orders", JSON.stringify(orders)); }, [orders]);
   useEffect(() => { localStorage.setItem("noor_brand_profile", JSON.stringify(brandProfile)); }, [brandProfile]);
 
-  // Handlers
   const handleReceiptUpload = (e) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -133,7 +115,7 @@ export default function App() {
   const handleShopItemAction = (product) => {
     const exist = cart.find((item) => item.id === product.id);
     if (!exist) {
-      if (product.stock < 1) return alert("⚠️ This exclusive article is completely sold out.");
+      if (product.stock < 1) return alert("This exclusive article is completely sold out.");
       setCart([...cart, { ...product, qty: 1, needsAlterations: false, customLength: "54", customBust: "22", customNotes: "" }]);
     }
   };
@@ -142,7 +124,7 @@ export default function App() {
     const targetProd = products.find(p => p.id === id);
     const cartItem = cart.find(item => item.id === id);
     if (targetProd && cartItem && cartItem.qty >= targetProd.stock) {
-      return alert(`⚠️ Maximum production capacity reached. Only ${targetProd.stock} pieces available.`);
+      return alert(`Maximum production capacity reached. Only ${targetProd.stock} pieces available.`);
     }
     setCart(prev => prev.map(item => item.id === id ? { ...item, qty: item.qty + 1 } : item));
   };
@@ -169,12 +151,12 @@ export default function App() {
     e.preventDefault();
     if (cart.length === 0) return alert("Your bag is empty!");
     if (checkoutForm.paymentMethod === "Bank Transfer" && !receiptBase64) {
-      return alert("⚠️ Please upload your bank transfer transaction receipt/screenshot to complete your custom order request.");
+      return alert("Please upload your bank transfer transaction receipt/screenshot to complete your custom order request.");
     }
     for (let item of cart) {
       const match = products.find(p => p.id === item.id);
       if (match && match.stock < item.qty) {
-        return alert(`⚠️ Sizing stock layout error: ${item.name} has only ${match.stock} units remaining.`);
+        return alert(`Sizing stock layout error: ${item.name} has only ${match.stock} units remaining.`);
       }
     }
 
@@ -200,7 +182,7 @@ export default function App() {
     setOrders([newOrder, ...orders]);
     setCart([]);
     setReceiptBase64(null);
-    alert(`🎉 Order Registered! Tracking Code: ${newOrder.orderId}`);
+    alert(`Order Registered! Tracking Code: ${newOrder.orderId}`);
     setSearchTrackId(newOrder.orderId);
     setSearchedOrder(newOrder);
     setCurrentPage("contact");
@@ -212,10 +194,10 @@ export default function App() {
     const foundOrder = orders.find(o => o.orderId.toUpperCase() === targetedId);
 
     if (!foundOrder) {
-      return setReturnStatusMsg({ success: false, text: "⚠️ No recorded matching invoice found within database servers." });
+      return setReturnStatusMsg({ success: false, text: "No recorded matching invoice found within database servers." });
     }
     if (foundOrder.status === "Cancelled") {
-      return setReturnStatusMsg({ success: false, text: "❌ This order tracking log is tagged as Cancelled/Void." });
+      return setReturnStatusMsg({ success: false, text: "This order tracking log is tagged as Cancelled/Void." });
     }
 
     const creationDate = new Date(foundOrder.date);
@@ -226,12 +208,12 @@ export default function App() {
     if (totalDaysElapsed <= 7) {
       setReturnStatusMsg({
         success: true,
-        text: `🟢 Return Valid! This order was generated on ${foundOrder.date} (${totalDaysElapsed} days ago). Your 7-Day Cashback Guarantee layer is active. Please hand over this verification ticket to our WhatsApp logistics helpdesk to securely process your refund payout.`
+        text: `Return Valid! This order was generated on ${foundOrder.date} (${totalDaysElapsed} days ago). Your 7-Day Cashback Guarantee layer is active. Please hand over this verification ticket to our WhatsApp logistics helpdesk to securely process your refund payout.`
       });
     } else {
       setReturnStatusMsg({
         success: false,
-        text: `❌ Return Terminated. This transaction was finalized on ${foundOrder.date} (${totalDaysElapsed} days ago), which explicitly passes our 7-day modesty safety duration cap.`
+        text: `Return Terminated. This transaction was finalized on ${foundOrder.date} (${totalDaysElapsed} days ago), which explicitly passes our 7-day modesty safety duration cap.`
       });
     }
   };
@@ -296,8 +278,6 @@ export default function App() {
   const totalCartUnits = cart.reduce((sum, item) => sum + item.qty, 0);
   const totalRevenue = orders.reduce((sum, o) => o.status !== "Cancelled" ? sum + o.total : sum, 0);
 
-  // ---- Computed values for admin dashboard ----
-
   const lowStockItems = useMemo(() => products.filter(p => p.stock <= 3), [products]);
 
   const bestSellers = useMemo(() => {
@@ -349,11 +329,8 @@ export default function App() {
     URL.revokeObjectURL(url);
   };
 
-  // ==================== RENDERING ====================
-
   return (
     <div className="noor-app-container">
-      {/* JSON-LD Schema Markup for SEO */}
       <script type="application/ld+json">
         {JSON.stringify({
           "@context": "https://schema.org",
@@ -370,120 +347,160 @@ export default function App() {
         })}
       </script>
 
-      {/* NAVIGATION */}
-      <nav className="noor-nav" role="navigation" aria-label="Main navigation">
-        <div className="noor-logo-group" onClick={() => setCurrentPage("home")} role="button" tabIndex="0" onKeyPress={(e) => e.key === "Enter" && setCurrentPage("home")} aria-label="Noor-e-Haya Home">
-          <img src={logoIcon} alt="Noor-e-Haya" className="noor-logo-img" />
-          <div className="noor-logo-text-group">
-            <div className="noor-logo-text">نور حیا</div>
-            <div className="noor-logo-sub">Noor e Haya</div>
-          </div>
-        </div>
-
-        <div className="noor-nav-links">
-          <button onClick={() => setCurrentPage("home")} className={currentPage === "home" ? "active" : ""} aria-current={currentPage === "home" ? "page" : undefined}>Home</button>
-          <button onClick={() => setCurrentPage("shop")} className={currentPage === "shop" ? "active" : ""} aria-current={currentPage === "shop" ? "page" : undefined}>Shop</button>
-          <button onClick={() => setCurrentPage("checkout")} className={currentPage === "checkout" ? "active" : ""} aria-current={currentPage === "checkout" ? "page" : undefined} aria-label={`Shopping bag with ${totalCartUnits} items`}>Bag ({totalCartUnits})</button>
-          <button onClick={() => setCurrentPage("contact")} className={currentPage === "contact" ? "active" : ""} aria-current={currentPage === "contact" ? "page" : undefined}>Tracking & Returns</button>
-          {adminAuth && <button onClick={() => setCurrentPage("admin")} className={currentPage === "admin" ? "active" : ""} aria-current={currentPage === "admin" ? "page" : undefined}>💻 HQ Command</button>}
+      <nav className="site-nav" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 28px", background: "linear-gradient(90deg, #F7F2EA, #EFE0BB)", borderBottom: "2px solid #C9A35D" }} role="navigation" aria-label="Main navigation">
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", cursor: "pointer" }} onClick={() => setCurrentPage("home")} role="button" tabIndex="0" onKeyPress={(e) => e.key === "Enter" && setCurrentPage("home")} aria-label="Noor-e-Haya Home">
+          <img src={logoIcon} alt="Noor-e-Haya" style={{ width: "36px", height: "36px", borderRadius: "50%" }} />
+          <div>
+  <div style={{ fontSize: "18px", color: "#8A7A3A", fontWeight: 500, lineHeight: 1.3 }}>نور حیا</div>
+  <div style={{ fontSize: "11px", color: "#6b6255", letterSpacing: "1px" }}>NOOR E HAYA</div>
+</div>
+</div>
+        <div className="nav-links" style={{ display: "flex", gap: "8px", fontSize: "12px" }}>
+          <button onClick={() => setCurrentPage("home")} style={{ border: currentPage === "home" ? "1px solid #C9A35D" : "1px solid transparent", color: currentPage === "home" ? "#C9A35D" : "#6b6b6b", background: "none", padding: "8px 14px", borderRadius: "4px", cursor: "pointer" }}>Home</button>
+          <button onClick={() => setCurrentPage("shop")} style={{ border: currentPage === "shop" ? "1px solid #C9A35D" : "1px solid transparent", color: currentPage === "shop" ? "#C9A35D" : "#6b6b6b", background: "none", padding: "8px 14px", borderRadius: "4px", cursor: "pointer" }}>Shop</button>
+          <button onClick={() => setCurrentPage("checkout")} style={{ border: currentPage === "checkout" ? "1px solid #C9A35D" : "1px solid transparent", color: currentPage === "checkout" ? "#C9A35D" : "#6b6b6b", background: "none", padding: "8px 14px", borderRadius: "4px", cursor: "pointer" }} aria-label={`Shopping bag with ${totalCartUnits} items`}>Bag ({totalCartUnits})</button>
+          <button onClick={() => setCurrentPage("contact")} style={{ border: currentPage === "contact" ? "1px solid #C9A35D" : "1px solid transparent", color: currentPage === "contact" ? "#C9A35D" : "#6b6b6b", background: "none", padding: "8px 14px", borderRadius: "4px", cursor: "pointer" }}>Tracking & Returns</button>
+          {adminAuth && <button onClick={() => setCurrentPage("admin")} style={{ border: currentPage === "admin" ? "1px solid #C9A35D" : "1px solid transparent", color: currentPage === "admin" ? "#C9A35D" : "#6b6b6b", background: "none", padding: "8px 14px", borderRadius: "4px", cursor: "pointer" }}>HQ Command</button>}
         </div>
       </nav>
 
-      <main className="noor-content" role="main">
-        
-        {/* ==================== HOME PAGE ==================== */}
-{currentPage === "home" && (
-  <div>
-    {/* ==================== FINAL HERO ==================== */}
-    <section className="hero-new">
-      <div className="hero-new-watermark" aria-hidden="true">
-        <span>ABAYA · ABAYA · ABAYA · ABAYA</span>
-        <span>ABAYA · ABAYA · ABAYA · ABAYA</span>
-      </div>
+      <main role="main">
 
-      <div
-        className="hero-new-photo"
-        ref={heroPhotoRef}
-        onMouseMove={handleHeroMouseMove}
-        onMouseLeave={handleHeroMouseLeave}
-        style={{
-          transform: `perspective(1000px) rotateX(${heroTilt.x}deg) rotateY(${heroTilt.y}deg)`,
-        }}
-      >
-        <img src={abayaHero} alt="Woman wearing a premium Noor-e-Haya abaya" />
-      </div>
+        {currentPage === "home" && (
+          <div>
 
-      <div className={`hero-new-content ${heroVisible ? "hero-visible" : ""}`}>
-        <div className="hero-thumb-strip">
-          {products.slice(0, 4).map((prod) => (
-            <img
-              key={prod.id}
-              src={prod.image}
-              alt={prod.name}
-              onClick={() => setCurrentPage("shop")}
-            />
-          ))}
-        </div>
-
-        <div className="hero-new-brand-row">
-          <div className="hero-new-logo-badge">
-            <img src={logoIcon} alt="Noor-e-Haya logo" />
-          </div>
-          <span className="hero-new-category">Premium Abaya Collection</span>
-        </div>
-
-        <h1 className="hero-new-wordmark-abaya">Abaya</h1>
-        <p className="hero-new-subheading-urdu">نور حیاء</p>
-        <h2 className="hero-new-headline">
-          Elegant <span className="accent">abayas</span>, crafted with grace
-        </h2>
-        <p className="hero-new-desc">
-          Bespoke imported fabrics shaped into pristine fluid silhouettes. Crafted elegantly for premium look and daily flow.
-        </p>
-        <button onClick={() => setCurrentPage("shop")} className="gold-btn" style={{ marginBottom: "18px" }}>Explore Full Catalog</button>
-
-        <div className="hero-new-badges">
-          <div className="hero-new-badge">
-            <Scissors size={16} style={{ color: "var(--gold-accent)" }} aria-hidden="true" />
-            <span>Free Alterations</span>
-          </div>
-          <div className="hero-new-badge">
-            <RefreshCw size={16} style={{ color: "var(--gold-accent)" }} aria-hidden="true" />
-            <span>7-Day Returns</span>
-          </div>
-          <div className="hero-new-badge">
-            <CheckCircle size={16} style={{ color: "var(--gold-accent)" }} aria-hidden="true" />
-            <span>Premium Fabric</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section className="feature-grid flatlay-bg">
-      <article className="feature-card">
-        <Scissors className="feature-icon" size={26} aria-hidden="true" />
-        <h3 className="feature-title">Bespoke Custom Alterations</h3>
-        <p className="feature-desc">
-          We value perfection. Select your exact abaya drop length and chest sizing specifications directly inside your selection bag for an immaculate fit.
-        </p>
-      </article>
-      <article className="feature-card">
-        <RefreshCw className="feature-icon" size={26} aria-hidden="true" />
-        <h3 className="feature-title">7-Day Cashback Guarantee</h3>
-        <p className="feature-desc">
-          Shop with absolute assurance. We provide a complete 100% moneyback return and size alteration framework valid up to 7 full days from your tracking generation timestamp.
-        </p>
-      </article>
-      <article className="feature-card">
-        <CheckCircle className="feature-icon" size={26} aria-hidden="true" />
-        <h3 className="feature-title">Premium Imported Fabrics</h3>
-        <p className="feature-desc">
-          Every Noor-E-Haya piece is meticulously tailored using premium Korean Nada and imported georgette weaves to assure light drapes and total opacity.
-        </p>
-      </article>
-    </section>
+            {/* ==================== BANNER: ABAYA over fabric close-up image ==================== */}
+           <section className="banner-section" style={{ position: "relative", minHeight: "260px", backgroundImage: `linear-gradient(rgba(10,8,3,0.3), rgba(10,8,3,0.6)), url(${fabricBanner})`, backgroundSize: "cover", backgroundPosition: "center", display: "flex", alignItems: "center", padding: "0 32px" }}>
+  <div className="banner-abaya-text" style={{ flex: 1, textAlign: "center" }}>
+    <h1 style={{ color: "#fff", fontSize: "clamp(28px, 6vw, 44px)", letterSpacing: "5px", margin: 0, fontWeight: 500 }}>ABAYA</h1>
   </div>
-)}
+  
+</section>
+
+            {/* ==================== OUR STORY + WE OFFER ==================== */}
+            <section className="story-section" style={{ display: "grid", gridTemplateColumns: "55% 45%", background: "#F7F2EA", padding: "48px 28px", gap: "32px", alignItems: "center" }}>
+          <div style={{ position: "relative", minHeight: "380px", borderRadius: "6px", overflow: "hidden", backgroundImage: `url(${storyBanner})`, backgroundSize: "cover", backgroundPosition: "center" }}>
+  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(10,8,3,0.1) 40%, rgba(10,8,3,0.6))" }} />
+  <div style={{ position: "absolute", bottom: "20px", left: "20px", zIndex: 2 }}>
+    <p style={{ color: "#e8d4a0", fontSize: "11px", margin: "0 0 4px", letterSpacing: "1px" }}>Welcome to</p>
+    <p style={{ color: "#fff", fontSize: "22px", fontWeight: 500, margin: 0, fontFamily: "Georgia, serif" }}>Noor e Haya</p>
+  </div>
+</div>
+
+<div>
+  <p style={{ fontSize: "10px", color: "#8A7A3A", letterSpacing: "3px", margin: "0 0 8px" }}>OUR STORY</p>
+                <div style={{ width: "28px", height: "1px", background: "#C9A35D", margin: "0 0 16px" }} />
+                <h2 style={{ fontFamily: "Georgia, serif", fontSize: "34px", letterSpacing: "2px", color: "#2b2314", margin: "0 0 4px", fontWeight: 500 }}>ABAYA</h2>
+                <p style={{ fontSize: "11px", color: "#8A7A3A", letterSpacing: "2px", margin: "0 0 16px" }}>BY NOOR E HAYA</p>
+                <p style={{ fontSize: "13px", color: "#6b6255", lineHeight: 1.8, margin: "0 0 22px" }}>
+                  Since our founding, Noor e Haya has been dedicated to crafting abayas that honor modesty without compromising elegance. Every stitch reflects our commitment to quality, comfort, and timeless grace.
+                </p>
+
+                <p style={{ fontSize: "12px", fontWeight: 600, color: "#2b2314", letterSpacing: "1px", margin: "0 0 14px" }}>WE OFFER</p>
+
+                <div className="offer-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px" }}>
+                  <div style={{ background: "#fff", borderRadius: "8px", padding: "16px 8px", textAlign: "center" }}>
+                    <div style={{ width: "38px", height: "38px", borderRadius: "50%", background: "#C9A35D", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 10px" }}>
+                      <Scissors size={16} style={{ color: "#fff" }} aria-hidden="true" />
+                    </div>
+                    <p style={{ fontSize: "11px", fontWeight: 600, color: "#2b2314", margin: 0 }}>Alterations</p>
+                  </div>
+                  <div style={{ background: "#fff", borderRadius: "8px", padding: "16px 8px", textAlign: "center" }}>
+                    <div style={{ width: "38px", height: "38px", borderRadius: "50%", background: "#C9A35D", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 10px" }}>
+                      <RefreshCw size={16} style={{ color: "#fff" }} aria-hidden="true" />
+                    </div>
+                    <p style={{ fontSize: "11px", fontWeight: 600, color: "#2b2314", margin: 0 }}>7-Day Return</p>
+                  </div>
+                  <div style={{ background: "#fff", borderRadius: "8px", padding: "16px 8px", textAlign: "center" }}>
+                    <div style={{ width: "38px", height: "38px", borderRadius: "50%", background: "#C9A35D", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 10px" }}>
+                      <CheckCircle size={16} style={{ color: "#fff" }} aria-hidden="true" />
+                    </div>
+                    <p style={{ fontSize: "11px", fontWeight: 600, color: "#2b2314", margin: 0 }}>Premium</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* ==================== THE COLLECTION ==================== */}
+            <section style={{ background: "#fff", padding: "48px 28px" }}>
+              <div style={{ textAlign: "center", marginBottom: "32px" }}>
+                <p style={{ fontSize: "10px", color: "#8A7A3A", letterSpacing: "3px", margin: "0 0 8px" }}>THE COLLECTION</p>
+                <div style={{ width: "28px", height: "1px", background: "#C9A35D", margin: "0 auto 16px" }} />
+                <h2 style={{ fontFamily: "Georgia, serif", fontSize: "26px", color: "#2b2314", margin: 0, fontWeight: 500 }}>What we have in store</h2>
+              </div>
+
+              <div className="collection-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "20px", maxWidth: "1100px", margin: "0 auto" }}>
+                {products.map((prod) => {
+                  const cartMatch = cart.find(item => item.id === prod.id);
+                  return (
+                    <div key={prod.id} style={{ background: "#F7F2EA", borderRadius: "8px", overflow: "hidden" }}>
+                      <div style={{ position: "relative" }}>
+                        <img src={prod.image} alt={prod.name} style={{ width: "100%", aspectRatio: "3/4", objectFit: "cover", display: "block" }} loading="lazy" />
+                        <span style={{ position: "absolute", top: "10px", left: "10px", background: "#C9A35D", color: "#2b2314", fontSize: "10px", fontWeight: 600, padding: "3px 8px", borderRadius: "3px" }}>{prod.tag}</span>
+                      </div>
+                      <div style={{ padding: "14px" }}>
+                        <p style={{ fontFamily: "Georgia, serif", fontSize: "14px", fontWeight: 500, color: "#2b2314", margin: "0 0 6px" }}>{prod.name}</p>
+                        <p style={{ fontSize: "11px", color: "#8a8070", margin: "0 0 12px" }}>{prod.color}</p>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                          <span style={{ color: "#C9A35D", fontSize: "14px", fontWeight: 500 }}>Rs. {prod.price.toLocaleString()}</span>
+                          <button
+                            onClick={() => handleShopItemAction(prod)}
+                            disabled={prod.stock === 0}
+                            style={{ border: "1px solid #2b2314", background: "transparent", fontSize: "10px", padding: "7px 14px", borderRadius: "3px", color: "#2b2314", cursor: prod.stock === 0 ? "not-allowed" : "pointer", opacity: prod.stock === 0 ? 0.4 : 1 }}
+                          >
+                            {prod.stock === 0 ? "SOLD OUT" : cartMatch ? `IN BAG (${cartMatch.qty})` : "ADD TO BAG"}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div style={{ textAlign: "center", marginTop: "32px" }}>
+                <button onClick={() => setCurrentPage("shop")} style={{ background: "#C9A35D", color: "#2b2314", fontSize: "12px", fontWeight: 500, padding: "13px 32px", borderRadius: "4px", letterSpacing: "1px", border: "none", cursor: "pointer" }}>
+                  VIEW FULL CATALOG
+                </button>
+              </div>
+            </section>
+
+            {/* ==================== CLOSING FOOTER ==================== */}
+            <footer style={{ background: "#1A1508", padding: "44px 28px" }}>
+              <div style={{ textAlign: "center", marginBottom: "24px" }}>
+                <p style={{ fontSize: "11px", color: "#C9A35D", margin: "0 0 6px" }}>نور حیا</p>
+                <h3 style={{ fontFamily: "Georgia, serif", fontSize: "20px", color: "#fff", margin: "0 0 8px", fontWeight: 500, letterSpacing: "1px" }}>NOOR E HAYA</h3>
+                <p style={{ fontSize: "12px", color: "#c9b892", margin: 0, fontStyle: "italic" }}>Elegant abayas, crafted with grace.</p>
+              </div>
+
+              <div style={{ width: "32px", height: "1px", background: "#C9A35D", margin: "0 auto 28px" }} />
+
+              <div className="footer-contact-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px", marginBottom: "28px", maxWidth: "700px", marginLeft: "auto", marginRight: "auto" }}>
+                <div style={{ textAlign: "center" }}>
+                  <p style={{ fontSize: "9px", color: "#8a7a5a", letterSpacing: "2px", margin: "0 0 8px" }}>CONTACT</p>
+                  <p style={{ fontSize: "11px", color: "#e8dcc4", margin: "0 0 4px" }}>+{brandProfile.whatsappNumber}</p>
+                  <p style={{ fontSize: "11px", color: "#e8dcc4", margin: 0 }}>hello@noorehaya.com</p>
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <p style={{ fontSize: "9px", color: "#8a7a5a", letterSpacing: "2px", margin: "0 0 8px" }}>VISIT US</p>
+                  <p style={{ fontSize: "11px", color: "#e8dcc4", margin: 0 }}>{brandProfile.studioAddress}</p>
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <p style={{ fontSize: "9px", color: "#8a7a5a", letterSpacing: "2px", margin: "0 0 8px" }}>FOLLOW</p>
+                  <p style={{ fontSize: "11px", color: "#e8dcc4", margin: "0 0 4px" }}><a href={brandProfile.instagramUrl} target="_blank" rel="noreferrer" style={{ color: "#e8dcc4" }}>Instagram</a></p>
+                  <p style={{ fontSize: "11px", color: "#e8dcc4", margin: 0 }}><a href={`https://wa.me/${brandProfile.whatsappNumber}`} target="_blank" rel="noreferrer" style={{ color: "#e8dcc4" }}>WhatsApp</a></p>
+                </div>
+              </div>
+
+              <div style={{ borderTop: "1px solid #3a2f1e", paddingTop: "18px", textAlign: "center" }}>
+                <p style={{ fontSize: "10px", color: "#8a7a5a", margin: 0 }}>
+  © 2026 Noor e Haya. Crafted with grace, worn with pride.
+  <span onClick={() => { setCurrentPage("admin"); window.scrollTo(0, 0); }} role="button" tabIndex="0" onKeyPress={(e) => e.key === "Enter" && (setCurrentPage("admin"), window.scrollTo(0, 0))} aria-label="Admin access" style={{ cursor: "pointer", marginLeft: "12px" }}>🔑</span>
+</p>
+              </div>
+            </footer>
+
+          </div>
+        )}
 
         {/* ==================== SHOP PAGE ==================== */}
         {currentPage === "shop" && (
@@ -707,7 +724,7 @@ export default function App() {
                           IBAN String: <span style={{ color: "white" }}>{brandProfile.iban}</span>
                           
                           <div style={{ marginTop: "15px", borderTop: "1px solid var(--border-muted)", paddingTop: "12px" }}>
-                            <p style={{ color: "var(--text-pure)", fontWeight: "bold", margin: "0 0 5px 0" }}>⚡ Upload Payment Proof Screenshot:</p>
+                            <p style={{ color: "var(--text-pure)", fontWeight: "bold", margin: "0 0 5px 0" }}>Upload Payment Proof Screenshot:</p>
                             <label className="upload-receipt-zone" style={{ display: "block" }}>
                               <input 
                                 type="file" 
@@ -771,7 +788,7 @@ export default function App() {
                 {searchedOrder && (
                   <div style={{ background: "#050505", border: "1px solid var(--border-light)", padding: "20px", marginTop: "15px" }} role="region" aria-label="Order details">
                     {searchedOrder === "NOT_FOUND" ? (
-                      <p style={{ color: "var(--status-error)", margin: 0, fontSize: "13px" }}>⚠️ No matching order ledger detected inside our current data logs.</p>
+                      <p style={{ color: "var(--status-error)", margin: 0, fontSize: "13px" }}>No matching order ledger detected inside our current data logs.</p>
                     ) : (
                       <div>
                         <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid var(--border-light)", paddingBottom: "12px", marginBottom: "15px" }}>
@@ -873,7 +890,6 @@ export default function App() {
                   </button>
                 </div>
 
-                {/* Low stock alert banner */}
                 {lowStockItems.length > 0 && (
                   <div style={{ background: "rgba(212,175,55,0.1)", border: "1px solid var(--gold-accent, #D4AF37)", padding: "14px 18px", borderRadius: "4px", display: "flex", alignItems: "center", gap: "10px" }} role="alert">
                     <AlertTriangle size={18} style={{ color: "#D4AF37", flexShrink: 0 }} aria-hidden="true" />
@@ -894,7 +910,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Admin tab navigation */}
                 <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", borderBottom: "1px solid #1E293B", paddingBottom: "12px" }}>
                   {[
                     { key: "overview", label: "Overview" },
@@ -923,7 +938,6 @@ export default function App() {
                   ))}
                 </div>
 
-                {/* OVERVIEW TAB: Add product + Best sellers */}
                 {adminTab === "overview" && (
                   <div className="admin-grid">
                     <div>
@@ -964,7 +978,6 @@ export default function App() {
                   </div>
                 )}
 
-                {/* INVENTORY TAB */}
                 {adminTab === "inventory" && (
                   <div style={{ background: "#0F172A", padding: "25px", border: "1px solid #1E293B" }}>
                     <h3 style={{ color: "white", fontSize: "14px", margin: "0 0 15px 0" }}>Inventory Overview ({products.length} Articles)</h3>
@@ -1014,7 +1027,6 @@ export default function App() {
                   </div>
                 )}
 
-                {/* ORDERS TAB */}
                 {adminTab === "orders" && (
                   <div style={{ background: "#0F172A", padding: "25px", border: "1px solid #1E293B" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px", marginBottom: "18px" }}>
@@ -1073,7 +1085,7 @@ export default function App() {
 
                           {o.receiptImage && (
                             <div style={{ marginTop: "10px", padding: "8px", background: "#0F172A", border: "1px solid #334155" }}>
-                              <span style={{ fontSize: "11px", color: "var(--gold-accent)", display: "block", marginBottom: "5px" }}>🖼️ Client Bank Proof Attachment:</span>
+                              <span style={{ fontSize: "11px", color: "var(--gold-accent)", display: "block", marginBottom: "5px" }}>Client Bank Proof Attachment:</span>
                               <a href={o.receiptImage} target="_blank" rel="noreferrer">
                                 <img src={o.receiptImage} alt="Payment proof for order" style={{ maxHeight: "100px", maxWidth: "100%", cursor: "zoom-in" }} />
                               </a>
@@ -1094,7 +1106,6 @@ export default function App() {
                   </div>
                 )}
 
-                {/* BRAND SETTINGS TAB */}
                 {adminTab === "settings" && (
                   <div className="admin-form-box" style={{ maxWidth: "600px" }}>
                     <h3 style={{ color: "white", fontSize: "14px", margin: "0 0 15px 0", display: "flex", alignItems: "center", gap: "8px" }}><Settings size={15} aria-hidden="true" /> Brand & Contact Settings</h3>
@@ -1132,12 +1143,6 @@ export default function App() {
           </section>
         )}
       </main>
-
-      {/* FOOTER */}
-      <footer className="flatlay-bg">
-        &copy; 2026 Noor-E-Haya Couture Luxury. All Rights Reserved. 
-        <span onClick={() => { setCurrentPage("admin"); window.scrollTo(0, 0); }} role="button" tabIndex="0" onKeyPress={(e) => e.key === "Enter" && (setCurrentPage("admin"), window.scrollTo(0, 0))} aria-label="Admin access" style={{ cursor: "pointer", marginLeft: "12px" }}>🔑</span>
-      </footer>
     </div>
   );
 }
