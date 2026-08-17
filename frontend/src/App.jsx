@@ -1,7 +1,7 @@
 import abayaHero from './assets/abaya-hero.png';
 import logoIcon from './assets/logo-icon.png';
 import fabricBanner from './assets/fabric-banner.jpg';
-import storyBanner from './assets/story-banner.jpg';
+import storyBanner from './assets/story-banner.png';
 import productBeige from './assets/product-beige.webp';
 import productIvory from './assets/product-ivory.webp';
 import productBlack from './assets/product-black.webp';
@@ -380,10 +380,10 @@ export default function App() {
             {/* ==================== OUR STORY + WE OFFER ==================== */}
             <section className="story-section" style={{ display: "grid", gridTemplateColumns: "55% 45%", background: "#F7F2EA", padding: "48px 28px", gap: "32px", alignItems: "center" }}>
           <div style={{ position: "relative", minHeight: "380px", borderRadius: "6px", overflow: "hidden", backgroundImage: `url(${storyBanner})`, backgroundSize: "cover", backgroundPosition: "center" }}>
-  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(10,8,3,0.1) 40%, rgba(10,8,3,0.6))" }} />
-  <div style={{ position: "absolute", bottom: "20px", left: "20px", zIndex: 2 }}>
+  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(10,8,3,0.6) 0%, rgba(10,8,3,0.25) 40%, rgba(10,8,3,0) 65%)" }} />
+  <div style={{ position: "absolute", top: "50%", left: "24px", transform: "translateY(-50%)", zIndex: 2, maxWidth: "55%" }}>
     <p style={{ color: "#e8d4a0", fontSize: "11px", margin: "0 0 4px", letterSpacing: "1px" }}>Welcome to</p>
-    <p style={{ color: "#fff", fontSize: "22px", fontWeight: 500, margin: 0, fontFamily: "Georgia, serif" }}>Noor e Haya</p>
+    <p style={{ color: "#fff", fontSize: "24px", fontWeight: 500, margin: 0, fontFamily: "Georgia, serif", lineHeight: 1.3 }}>Noor e Haya Abaya Store</p>
   </div>
 </div>
 
