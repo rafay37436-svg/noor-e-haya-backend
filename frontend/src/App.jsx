@@ -50,9 +50,9 @@ const INITIAL_PRODUCTS = [
 export default function App() {
   const [currentPage, setCurrentPage] = useState("home");
   const [products, setProducts] = useState(() => {
-    const saved = localStorage.getItem("noor_products");
-    return saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
-  });
+  const saved = localStorage.getItem("noor_products_v2");
+  return saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
+});
   const [cart, setCart] = useState(() => {
     const saved = localStorage.getItem("noor_cart");
     return saved ? JSON.parse(saved) : [];
@@ -95,7 +95,7 @@ export default function App() {
   const [orderStatusFilter, setOrderStatusFilter] = useState("All");
   const [adminTab, setAdminTab] = useState("overview");
 
-  useEffect(() => { localStorage.setItem("noor_products", JSON.stringify(products)); }, [products]);
+  useEffect(() => { localStorage.setItem("noor_products_v2", JSON.stringify(products)); }, [products]);
   useEffect(() => { localStorage.setItem("noor_cart", JSON.stringify(cart)); }, [cart]);
   useEffect(() => {
   window.scrollTo(0, 0);
@@ -385,7 +385,7 @@ export default function App() {
     <p style={{ color: "#e8d4a0", fontSize: "11px", margin: "0 0 4px", letterSpacing: "1px" }}>Welcome to</p>
     <p style={{ color: "#fff", fontSize: "24px", fontWeight: 500, margin: 0, fontFamily: "Georgia, serif", lineHeight: 1.3 }}>Noor e Haya Abaya Store</p>
   </div>
-</div>
+</div>move "D:\noor e haya\story-banner.png" "D:\noor e haya\frontend\src\assets\story-banner.png"
 
 <div>
   <p style={{ fontSize: "10px", color: "#8A7A3A", letterSpacing: "3px", margin: "0 0 8px" }}>OUR STORY</p>
