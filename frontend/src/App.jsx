@@ -385,7 +385,7 @@ export default function App() {
     <p style={{ color: "#e8d4a0", fontSize: "11px", margin: "0 0 4px", letterSpacing: "1px" }}>Welcome to</p>
     <p style={{ color: "#fff", fontSize: "24px", fontWeight: 500, margin: 0, fontFamily: "Georgia, serif", lineHeight: 1.3 }}>Noor e Haya Abaya Store</p>
   </div>
-</div>move "D:\noor e haya\story-banner.png" "D:\noor e haya\frontend\src\assets\story-banner.png"
+</div>
 
 <div>
   <p style={{ fontSize: "10px", color: "#8A7A3A", letterSpacing: "3px", margin: "0 0 8px" }}>OUR STORY</p>
